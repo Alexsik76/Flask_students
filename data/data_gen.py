@@ -25,3 +25,4 @@ def get_group():
 users = [get_user() for i in range(200)]
 groups = [get_group() for j in range(10)]
 courses = data['courses']
+print('Users:\t\t', len(users), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))
