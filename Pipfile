@@ -12,6 +12,7 @@ setuptools = "*"
 python-dotenv = "*"
 pytest = "*"
 requests = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 
