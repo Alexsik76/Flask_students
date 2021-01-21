@@ -5,6 +5,18 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 
+def get_env_variable(name):
+    try:
+        return os.environ[name]
+    except KeyError:
+        message = f"Expected environment variable {name} not set."
+        raise Exception(message)
+
+
+DB_USER = get_env_variable("DB_USER")
+DB_PW = get_env_variable("DB_PW")
+
+
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -16,7 +28,7 @@ class Config(object):
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL') or f'postgresql://{user}{password}@localhost/{os.path.join(basedir, "app.db")}'
+        'DATABASE_URL') or f'postgresql://{DB_USER}{DB_PW}@localhost/{os.path.join(basedir, "app.db")}'
 
 
 class DevelopmentConfig(Config):
