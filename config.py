@@ -23,12 +23,14 @@ class Config(object):
     SECRET_KEY = 'dev'
     STATIC_FOLDER = 'app/static'
     TEMPLATES_FOLDER = 'app/templates'
+    BASE_DIR = basedir
     # JSON_SORT_KEYS = False
     BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL') or f'postgresql://{DB_USER}{DB_PW}@localhost/{os.path.join(basedir, "app.db")}'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(Config):

@@ -26,8 +26,8 @@ def create_app(test_config=None):
     # my_api.init_app(api_bp)
     # app.register_blueprint(api_bp)
 
-    # from app.main import bp
-    # app.register_blueprint(bp)
+    from app.main import bp
+    app.register_blueprint(bp)
 
     db.init_app(app)
 
