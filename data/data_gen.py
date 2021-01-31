@@ -2,15 +2,17 @@ import json
 from random import choice
 from string import ascii_lowercase as letters
 from string import digits
+import names
 
 
-with open('data.json') as file:
+with open('data/data.json') as file:
     data = json.load(file)
 
 
-def get_user():
-    return choice(data['first_names']), \
-           choice(data['last_names'])
+def get_student():
+    first_name = names.get_first_name(gender=choice(('male', 'female')))
+    last_name = names.get_last_name()
+    return first_name, last_name
 
 
 def get_course():
@@ -22,7 +24,7 @@ def get_group():
            f'{choice(digits)}{choice(digits)}'
 
 
-users = [get_user() for i in range(200)]
+students = [get_student() for i in range(200)]
 groups = [get_group() for j in range(10)]
 courses = data['courses']
-print('Users:\t\t', len(users), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))
+print('Students:\t\t', len(students), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))

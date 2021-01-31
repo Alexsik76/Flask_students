@@ -1,4 +1,3 @@
-{"first_names": ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"],
- "last_names": ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Martinez", "Anderson", "Taylor", "Thomas", "Hernandez", "Moore", "Martin", "Jackson", "Thompson", "White"],
+{
  "courses": ["Performing arts", "Visual arts", "History", "Languages and literature", "Law", "Philosophy", "Theology", "Anthropology", "Economics", "Geography"]
 }

@@ -9,16 +9,6 @@ class GroupModel(db.Model):
         return f'<Group {self.name}>'
 
 
-class StudentModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(24), index=True)
-    last_name = db.Column(db.String(24), index=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('groupmodel.id'))
-
-    def __repr__(self):
-        return f'<Student {self.first_name} {self.last_name}>'
-
-
 class CourseModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24), index=True)
@@ -26,3 +16,15 @@ class CourseModel(db.Model):
 
     def __repr__(self):
         return f'<Student {self.name} {self.description}>'
+
+
+class StudentModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(24), index=True)
+    last_name = db.Column(db.String(24), index=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group_model.id'), nullable=False)
+    group = db.relationship('GroupModel', backref=db.backref('students', lazy=True))
+
+    def __repr__(self):
+        return f'<Student {self.first_name} {self.last_name}\n' \
+               f'Group {self.group}\n>'

@@ -13,6 +13,10 @@ python-dotenv = "*"
 pytest = "*"
 requests = "*"
 flask-sqlalchemy = "*"
+click = "*"
+install = "*"
+psycopg2 = "*"
+names = "*"
 
 [dev-packages]
 
