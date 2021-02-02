@@ -15,6 +15,7 @@ def get_env_variable(name):
 
 DB_USER = get_env_variable("DB_USER")
 DB_PW = get_env_variable("DB_PW")
+DB_NAME = get_env_variable("DB_NAME")
 
 
 class Config(object):
@@ -29,7 +30,7 @@ class Config(object):
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL') or f'postgresql://{DB_USER}{DB_PW}@localhost/{os.path.join(basedir, "app.db")}'
+        'DATABASE_URL') or f'postgresql://{DB_USER}:{DB_PW}@79.143.42.89:30009/{DB_NAME}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
