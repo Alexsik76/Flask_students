@@ -9,6 +9,7 @@ from flaskext.markdown import Markdown
 bootstrap = Bootstrap()
 my_api = Api()
 db = SQLAlchemy()
+""":type: sqlalchemy.orm.Session"""
 
 
 def create_app(test_config=None):

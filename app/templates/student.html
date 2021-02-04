@@ -1,0 +1,11 @@
+{% extends "base_templates/base.html" %}
+{% block content %}
+Student: {{ student.first_name }} {{ student.last_name }}<br>
+Group: {{ student.group.name }}<br>
+    Courses:
+    <ul>
+    {% for item in student.courses%}
+    <li>{{ item.name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

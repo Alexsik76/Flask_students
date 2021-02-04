@@ -30,7 +30,7 @@ class Config(object):
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL') or f'postgresql://{DB_USER}:{DB_PW}@79.143.42.89:30009/{DB_NAME}'
+        'DATABASE_URL') or f'postgresql+psycopg2://{DB_USER}:{DB_PW}@79.143.42.89:30009/{DB_NAME}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

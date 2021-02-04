@@ -47,6 +47,12 @@ def all_students():
     return render_template('students.html', students=students)
 
 
+@bp.route('/students/<pk>')
+def student(pk):
+    this_student = StudentModel.query.get_or_404(pk)
+    return render_template('student.html', student=this_student)
+
+
 @bp.app_errorhandler(404)
 def page_not_found(error):
     flash(error, 'danger')
