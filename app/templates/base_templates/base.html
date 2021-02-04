@@ -1,14 +1,14 @@
-    {% include 'head.html' %}
+    {% include 'base_templates/head.html' %}
     {% from 'bootstrap/nav.html' import render_nav_item %}
     {% from 'bootstrap/utils.html' import render_icon, render_messages %}
 <body style="padding-top: 50px">
-    {% include 'navbar.html' %}
+    {% include 'base_templates/navbar.html' %}
 <div class="alert">{{ render_messages() }}</div>
 <main>
     <div class="jumbotron container ">
         {% block content %}{% endblock %}
     </div>
 </main>
-{% include 'footer.html' %}
+{% include 'base_templates/footer.html' %}
 {{ bootstrap.load_js() }}
 </body>

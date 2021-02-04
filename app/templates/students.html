@@ -1,0 +1,5 @@
+{% extends "base_templates/base.html" %}
+{% from 'bootstrap/table.html' import render_table %}
+{% block content %}
+{{ render_table(students) }}
+{% endblock %}

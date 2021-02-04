@@ -1,0 +1,19 @@
+{% extends "base_templates/base.html" %}
+{% block content %}
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th class=text-left style="position: sticky; top: 50px">URL</th>
+            <th class=text-left style="position: sticky; top: 50px">Rule Endpoint</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for url, endpoint in links %}
+            <tr>
+                <td><a href="{{ url }}">{{ endpoint }}</a></td>
+                <td>{{ url }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

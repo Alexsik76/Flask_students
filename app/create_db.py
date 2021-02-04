@@ -1,6 +1,6 @@
 import click
 from flask.cli import with_appcontext
-from random import randint
+from random import randint, sample
 
 from app import db
 from app.models import GroupModel, CourseModel, StudentModel
@@ -20,7 +20,11 @@ def init_db():
         for number in range(randint(10, 30)):
             if students:
                 first_name, last_name = students.pop()
-                students_db.append(StudentModel(first_name=first_name, last_name=last_name, group_id=group.id))
+                target_courses = sample(courses_db, randint(1, 3))
+                students_db.append(StudentModel(first_name=first_name,
+                                                last_name=last_name,
+                                                group_id=group.id,
+                                                courses=target_courses))
     db.session.add_all(students_db)
     db.session.commit()
     print('Data stored to the DB')

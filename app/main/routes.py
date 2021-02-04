@@ -1,9 +1,9 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
 
-
+from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-# from app.models import Racer
+
 
 
 # def flash_content(is_desc) -> tuple:
@@ -41,7 +41,10 @@ def index():
     return render_template('index.html', md_text=html_from_readme())
 
 
-
+@bp.route('/students')
+def all_students():
+    students = StudentModel.query.all()
+    return render_template('students.html', students=students)
 
 
 @bp.app_errorhandler(404)
