@@ -1,11 +1,11 @@
 {% extends "base_templates/base.html" %}
 {% block content %}
-Student: {{ student.first_name }} {{ student.last_name }}<br>
-Group: {{ student.group.name }}<br>
-    Courses:
+<h3><strong>Student:</strong> {{ student.first_name }} {{ student.last_name }}</h3><br>
+<h3><strong>Group:</strong> {{ student.group.name }}</h3><br>
+<h3><strong>Courses:</strong></h3>
     <ul>
     {% for item in student.courses%}
-    <li>{{ item.name }}</li>
+    <li><h4>{{ item.name }}</h4></li>
     {% endfor %}
     </ul>
 {% endblock %}

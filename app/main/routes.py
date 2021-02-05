@@ -48,7 +48,7 @@ def all_students():
 
 
 @bp.route('/students/<pk>')
-def student(pk):
+def info_student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     return render_template('student.html', student=this_student)
 
