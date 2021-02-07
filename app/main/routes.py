@@ -3,9 +3,13 @@ from flask import render_template, request, current_app, abort, url_for, flash
 
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchForm
 
 
+# def get_form(app):
+#     with app.app_context():
+#         from app.main.forms import SearchForm
+#         form = SearchForm()
+#     return form
 # def flash_content(is_desc) -> tuple:
 #     """Forms params of the flash function.
 #
@@ -42,10 +46,16 @@ def index():
 
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
+    from app.main.forms import SearchForm
     form = SearchForm()
-    if form.is_submitted() and form.search_text.data:
-        req = {form.search_by.data: form.search_text.data}
-        data = StudentModel.query.filter_by(**req).all()
+    if form.search_text.data or form.choice_group.data or form.choice_course.data:
+        if form.search_by.data == 'group':
+            data = StudentModel.query.filter(StudentModel.group.has(GroupModel.name == form.choice_group.data)).all()
+        elif form.search_by.data == 'course':
+            data = StudentModel.query.filter(StudentModel.courses.any(CourseModel.name == form.choice_course.data)).all()
+        else:
+            req = {form.search_by.data: form.search_text.data}
+            data = StudentModel.query.filter_by(**req).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)

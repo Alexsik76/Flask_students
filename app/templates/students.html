@@ -1,12 +1,6 @@
 {% extends "base_templates/base.html" %}
-{% from 'bootstrap/form.html' import render_form_row %}
-
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
-<form method="post">
-    {{ form.csrf_token() }}
-    {{ render_form_row([form.search_text, form.search_by, form.submit], col_class_default='col-md-5', col_map={'search_text': 'col-md-2'}) }}
-</form>
-
+{% include 'base_templates/search_row.html' %}
 {{ render_table(data, show_actions=True, view_url=url_for('main.info_student', pk=':primary_key')) }}
 {% endblock %}
