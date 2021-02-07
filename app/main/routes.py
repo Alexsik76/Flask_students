@@ -3,7 +3,7 @@ from flask import render_template, request, current_app, abort, url_for, flash
 
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-
+from app.main.forms import SearchForm
 
 
 # def flash_content(is_desc) -> tuple:
@@ -16,7 +16,6 @@ from app.main import bp
 #     founded = (f'Data sorted by {sort_order}', 'primary')
 #     not_founded = ('Application did not found needed data files.', 'danger')
 #     return founded if Racer.select() else not_founded
-
 
 def html_from_readme() -> str:
     """ Read README.md file
@@ -41,10 +40,15 @@ def index():
     return render_template('index.html', md_text=html_from_readme())
 
 
-@bp.route('/students')
+@bp.route('/students', methods=['GET', 'POST'])
 def all_students():
-    students = StudentModel.query.all()
-    return render_template('students.html', students=students)
+    form = SearchForm()
+    if form.is_submitted() and form.search_text.data:
+        req = {form.search_by.data: form.search_text.data}
+        data = StudentModel.query.filter_by(**req).all()
+    else:
+        data = StudentModel.query.all()
+    return render_template('students.html', data=data, form=form)
 
 
 @bp.route('/students/<pk>')
