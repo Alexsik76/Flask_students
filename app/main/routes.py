@@ -3,7 +3,7 @@ from flask import render_template, request, current_app, abort, url_for, flash
 
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-
+from app.main.forms import SearchForm
 
 # def get_form(app):
 #     with app.app_context():
@@ -20,6 +20,19 @@ from app.main import bp
 #     founded = (f'Data sorted by {sort_order}', 'primary')
 #     not_founded = ('Application did not found needed data files.', 'danger')
 #     return founded if Racer.select() else not_founded
+
+
+def get_list(query):
+    with current_app.app_context():
+        items = [(item.name, item.name) for item in query]
+        items.append((None, None))
+    return items
+
+
+def populate_form_choices(form):
+    form.choice_group.choices = get_list(GroupModel.query.all())
+    form.choice_course.choices = get_list(CourseModel.query.all())
+
 
 def html_from_readme() -> str:
     """ Read README.md file
@@ -46,8 +59,8 @@ def index():
 
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
-    from app.main.forms import SearchForm
     form = SearchForm()
+    populate_form_choices(form)
     if form.search_text.data or form.choice_group.data or form.choice_course.data:
         if form.search_by.data == 'group':
             data = StudentModel.query.filter(StudentModel.group.has(GroupModel.name == form.choice_group.data)).all()
