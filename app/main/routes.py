@@ -1,6 +1,6 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
-from sqlalchemy import tuple_, text
+from sqlalchemy import tuple_, text, and_
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
@@ -25,7 +25,7 @@ from app.main.forms import SearchForm
 def get_list_for_choices(query):
     with current_app.app_context():
         items = [(item.name, item.name) for item in query]
-        items.append((None, None))
+        items.append(('', '____'))
     return items
 
 
@@ -58,11 +58,11 @@ def index():
 
 
 query_dict = {
-    'group': {'form': 'choice_group', 'query': 'StudentModel.group.has(GroupModel.name == form.choice_group.data)'},
+    'group': {'form': 'choice_group', 'query': u'StudentModel.group.has(GroupModel.name == form.choice_group.data)'},
     'course': {'form': 'choice_course',
-               'query': 'StudentModel.courses.any(CourseModel.name == form.choice_course.data)'},
-    'first_name': {'form': 'first_name', 'query': 'StudentModel.first_name == form.first_name.data'},
-    'last_name': {'form': 'last_name', 'query': 'StudentModel.last_name == form.last_name.data'}
+               'query': u'StudentModel.courses.any(CourseModel.name == form.choice_course.data)'},
+    'first_name': {'form': 'first_name', 'query': u'StudentModel.first_name == form.first_name.data'},
+    'last_name': {'form': 'last_name', 'query': u'StudentModel.last_name == form.last_name.data'}
     }
 
 
@@ -70,11 +70,10 @@ query_dict = {
 def all_students():
     form = SearchForm()
     populate_form_choices(form)
-    queries = tuple(
-        query_dict[key]['query'] for key, value in query_dict.items() if getattr(getattr(form, value['form']), 'data') is not None)
-    if form.is_submitted() and queries:
-        print(*queries)
-        data = StudentModel.query.filter(text(*queries)).all()
+    if any(form.data.values()):
+        old_query = tuple(query_dict[key]['query'] for key, value in query_dict.items() if form.data[value['form']])
+        query = text('StudentModel.first_name == form.first_name.data')
+        data = StudentModel.query.filter(text(*old_query)).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)
