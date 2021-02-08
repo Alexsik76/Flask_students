@@ -1,17 +1,11 @@
 {% from 'bootstrap/form.html' import render_field %}
 <form method="post">
     <div class="form-row">
-        <div class="col-7">
-            {% if form.search_by.data == 'group' %}
-                {{ render_field(form.choice_group, form_type='inline') }}
-            {% elif  form.search_by.data == 'course'%}
-                {{ render_field(form.choice_course, form_type='inline') }}
-            {% else %}
-                {{ render_field(form.search_text, form_type='inline', placeholder="Enter text") }}
-            {% endif %}
-        </div>
-        <div class="col">
-            {{ render_field(form.search_by, form_type='inline') }}
+        <div class="col-4">
+            {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
+            {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
+            {{ render_field(form.choice_group, form_type='inline') }}
+            {{ render_field(form.choice_course, form_type='inline') }}
         </div>
         <div class="col">
             {{ render_field(form.submit) }}

@@ -1,6 +1,6 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
-
+from sqlalchemy import tuple_
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
@@ -22,7 +22,7 @@ from app.main.forms import SearchForm
 #     return founded if Racer.select() else not_founded
 
 
-def get_list(query):
+def get_list_for_choices(query):
     with current_app.app_context():
         items = [(item.name, item.name) for item in query]
         items.append((None, None))
@@ -30,8 +30,8 @@ def get_list(query):
 
 
 def populate_form_choices(form):
-    form.choice_group.choices = get_list(GroupModel.query.all())
-    form.choice_course.choices = get_list(CourseModel.query.all())
+    form.choice_group.choices = get_list_for_choices(GroupModel.query.all())
+    form.choice_course.choices = get_list_for_choices(CourseModel.query.all())
 
 
 def html_from_readme() -> str:
@@ -57,21 +57,42 @@ def index():
     return render_template('index.html', md_text=html_from_readme())
 
 
+query_dict = {
+    'group': {'form': 'choice_group', 'query': 'StudentModel.group.has(GroupModel.name == form.choice_group.data)'},
+    'course': {'form': 'choice_course',
+               'query': 'StudentModel.courses.any(CourseModel.name == form.choice_course.data)'},
+    'first_name': {'form': 'first_name', 'query': 'StudentModel.first_name == form.first_name.data)'},
+    'last_name': {'form': 'last_name', 'query': 'StudentModel.last_name == form.last_name.data)'}
+    }
+
+
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
     populate_form_choices(form)
-    if form.search_text.data or form.choice_group.data or form.choice_course.data:
-        if form.search_by.data == 'group':
-            data = StudentModel.query.filter(StudentModel.group.has(GroupModel.name == form.choice_group.data)).all()
-        elif form.search_by.data == 'course':
-            data = StudentModel.query.filter(StudentModel.courses.any(CourseModel.name == form.choice_course.data)).all()
-        else:
-            req = {form.search_by.data: form.search_text.data}
-            data = StudentModel.query.filter_by(**req).all()
+    if form.is_submitted():
+        queries = tuple_(query_dict[key]['query'] for key, value in query_dict.items() if getattr(form, value['form']))
+        data = StudentModel.query.filter(queries).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)
+
+
+# @bp.route('/students', methods=['GET', 'POST'])
+# def all_students():
+#     form = SearchForm()
+#     populate_form_choices(form)
+#     if form.search_text.data or form.choice_group.data or form.choice_course.data:
+#         if form.search_by.data == 'group':
+#             data = StudentModel.query.filter(StudentModel.group.has(GroupModel.name == form.choice_group.data)).all()
+#         elif form.search_by.data == 'course':
+#             data = StudentModel.query.filter(StudentModel.courses.any(CourseModel.name == form.choice_course.data)).all()
+#         else:
+#             req = {form.search_by.data: form.search_text.data}
+#             data = StudentModel.query.filter_by(**req).all()
+#     else:
+#         data = StudentModel.query.all()
+#     return render_template('students.html', data=data, form=form)
 
 
 @bp.route('/students/<pk>')
