@@ -1,6 +1,6 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
-from sqlalchemy import tuple_
+from sqlalchemy import tuple_, text
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
@@ -61,8 +61,8 @@ query_dict = {
     'group': {'form': 'choice_group', 'query': 'StudentModel.group.has(GroupModel.name == form.choice_group.data)'},
     'course': {'form': 'choice_course',
                'query': 'StudentModel.courses.any(CourseModel.name == form.choice_course.data)'},
-    'first_name': {'form': 'first_name', 'query': 'StudentModel.first_name == form.first_name.data)'},
-    'last_name': {'form': 'last_name', 'query': 'StudentModel.last_name == form.last_name.data)'}
+    'first_name': {'form': 'first_name', 'query': 'StudentModel.first_name == form.first_name.data'},
+    'last_name': {'form': 'last_name', 'query': 'StudentModel.last_name == form.last_name.data'}
     }
 
 
@@ -70,9 +70,11 @@ query_dict = {
 def all_students():
     form = SearchForm()
     populate_form_choices(form)
-    if form.is_submitted():
-        queries = tuple_(query_dict[key]['query'] for key, value in query_dict.items() if getattr(form, value['form']))
-        data = StudentModel.query.filter(queries).all()
+    queries = tuple(
+        query_dict[key]['query'] for key, value in query_dict.items() if getattr(getattr(form, value['form']), 'data') is not None)
+    if form.is_submitted() and queries:
+        print(*queries)
+        data = StudentModel.query.filter(text(*queries)).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)
