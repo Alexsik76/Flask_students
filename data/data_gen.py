@@ -11,10 +11,10 @@ def get_student():
     return first_name, last_name
 
 
-def get_course():
+def get_courses():
     with open('data/data.json') as file:
         data = json.load(file)
-    return choice(data['courses'])
+    return data['courses']
 
 
 def get_group():
@@ -25,6 +25,6 @@ def get_group():
 def generate():
     students = [get_student() for i in range(200)]
     groups = [get_group() for j in range(10)]
-    courses = get_course()
+    courses = get_courses()
     print('Students:\t\t', len(students), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))
     return students, groups, courses
