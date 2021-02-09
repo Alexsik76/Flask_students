@@ -22,16 +22,17 @@ from app.main.forms import SearchForm
 #     return founded if Racer.select() else not_founded
 
 
-def get_list_for_choices(query):
+def get_list_for_choices(query, display_name):
     with current_app.app_context():
         items = [(item.name, item.name) for item in query]
-        items.append(('', '____'))
+        default_choice = f'Choice {display_name}'
+        items.append(('', default_choice))
     return items
 
 
 def populate_form_choices(form):
-    form.choice_group.choices = get_list_for_choices(GroupModel.query.all())
-    form.choice_course.choices = get_list_for_choices(CourseModel.query.all())
+    form.choice_group.choices = get_list_for_choices(GroupModel.query.all(), 'group')
+    form.choice_course.choices = get_list_for_choices(CourseModel.query.all(), 'course')
 
 
 def html_from_readme() -> str:

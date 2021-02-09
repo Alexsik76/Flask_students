@@ -1,10 +1,17 @@
-{% from 'bootstrap/form.html' import render_field %}
+{% from 'bootstrap/form.html' import render_field, render_form %}
+{#{{ render_form(form, form_type='inline') }}#}
 <form method="post">
     <div class="form-row">
-        <div class="col-4">
+        <div class="col">
             {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
+            </div>
+        <div class="col">
             {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
+             </div>
+        <div class="col">
             {{ render_field(form.choice_group, form_type='inline') }}
+             </div>
+        <div class="col">
             {{ render_field(form.choice_course, form_type='inline') }}
         </div>
         <div class="col">
