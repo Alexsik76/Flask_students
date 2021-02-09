@@ -30,9 +30,9 @@ def create_app(test_config=None):
     app.register_blueprint(bp)
 
     db.init_app(app)
-    # from app import create_db
-    # create_db.init_app(app)
-    Markdown(app, output_format='html4')
+    from app.create_db import init_app
+    init_app(app)
+    Markdown(app)
 
     return app
 

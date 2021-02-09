@@ -72,8 +72,8 @@ def all_students():
     populate_form_choices(form)
     if any(form.data.values()):
         old_query = tuple(query_dict[key]['query'] for key, value in query_dict.items() if form.data[value['form']])
-        query = text('StudentModel.first_name == form.first_name.data')
-        data = StudentModel.query.filter(text(*old_query)).all()
+        query = StudentModel.first_name == form.first_name.data
+        data = StudentModel.query.filter(query).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)

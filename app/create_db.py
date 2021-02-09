@@ -4,13 +4,14 @@ from random import randint, sample
 
 from app import db
 from app.models import GroupModel, CourseModel, StudentModel
-from data.data_gen import students, groups, courses
+from data.data_gen import generate
 
 
 def init_db():
     if db.table:
         db.drop_all()
     db.create_all()
+    students, groups, courses = generate()
     groups_db = [GroupModel(name=group) for group in groups]
     db.session.add_all(groups_db)
     courses_db = [CourseModel(name=course) for course in courses]

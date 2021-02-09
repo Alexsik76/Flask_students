@@ -5,10 +5,6 @@ from string import digits
 import names
 
 
-with open('data/data.json') as file:
-    data = json.load(file)
-
-
 def get_student():
     first_name = names.get_first_name(gender=choice(('male', 'female')))
     last_name = names.get_last_name()
@@ -16,6 +12,8 @@ def get_student():
 
 
 def get_course():
+    with open('data/data.json') as file:
+        data = json.load(file)
     return choice(data['courses'])
 
 
@@ -24,7 +22,9 @@ def get_group():
            f'{choice(digits)}{choice(digits)}'
 
 
-students = [get_student() for i in range(200)]
-groups = [get_group() for j in range(10)]
-courses = data['courses']
-print('Students:\t\t', len(students), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))
+def generate():
+    students = [get_student() for i in range(200)]
+    groups = [get_group() for j in range(10)]
+    courses = get_course()
+    print('Students:\t\t', len(students), '\nGroups:\t\t', len(groups), '\nCourses:\t', len(courses))
+    return students, groups, courses

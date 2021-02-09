@@ -18,6 +18,7 @@ install = "*"
 psycopg2 = "*"
 names = "*"
 flask-wtf = "*"
+pymysql = "*"
 
 [dev-packages]
 
