@@ -58,9 +58,6 @@ def index():
     return render_template('index.html', md_text=html_from_readme())
 
 
-
-
-
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
