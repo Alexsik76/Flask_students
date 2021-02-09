@@ -57,23 +57,24 @@ def index():
     return render_template('index.html', md_text=html_from_readme())
 
 
-query_dict = {
-    'group': {'form': 'choice_group', 'query': u'StudentModel.group.has(GroupModel.name == form.choice_group.data)'},
-    'course': {'form': 'choice_course',
-               'query': u'StudentModel.courses.any(CourseModel.name == form.choice_course.data)'},
-    'first_name': {'form': 'first_name', 'query': u'StudentModel.first_name == form.first_name.data'},
-    'last_name': {'form': 'last_name', 'query': u'StudentModel.last_name == form.last_name.data'}
-    }
+
 
 
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
     populate_form_choices(form)
-    if any(form.data.values()):
-        old_query = tuple(query_dict[key]['query'] for key, value in query_dict.items() if form.data[value['form']])
-        query = StudentModel.first_name == form.first_name.data
-        data = StudentModel.query.filter(query).all()
+    query_dict = {
+        'group': {'form': 'choice_group',
+                  'query': StudentModel.group.has(GroupModel.name == form.choice_group.data)},
+        'course': {'form': 'choice_course',
+                   'query': StudentModel.courses.any(CourseModel.name == form.choice_course.data)},
+        'first_name': {'form': 'first_name', 'query': StudentModel.first_name == form.first_name.data},
+        'last_name': {'form': 'last_name', 'query': StudentModel.last_name == form.last_name.data}
+    }
+    queries = tuple(query_dict[key]['query'] for key, value in query_dict.items() if form.data[value['form']])
+    if queries and form.is_submitted():
+        data = StudentModel.query.filter(and_(*queries)).all()
     else:
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)
