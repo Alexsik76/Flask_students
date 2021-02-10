@@ -57,26 +57,24 @@ def index():
     #     flash('Application did not found needed data files.', 'danger')
     return render_template('index.html', md_text=html_from_readme())
 
+
 def create_query(form):
-    print(dir(form))
-    print(form.fields)
+    query_dict = {
+        'choice_group': StudentModel.group.has(GroupModel.name == form.choice_group.data),
+        'choice_course': StudentModel.courses.any(CourseModel.name == form.choice_course.data),
+        'first_name': StudentModel.first_name == form.first_name.data,
+        'last_name': StudentModel.last_name == form.last_name.data
+    }
+    queries = tuple(value for key, value in query_dict.items() if form.data[key])
+    print(queries)
+    return queries
 
 
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
     populate_form_choices(form)
-    query_dict = {
-        'group': {'form': 'choice_group',
-                  'query': StudentModel.group.has(GroupModel.name == form.choice_group.data)},
-        'course': {'form': 'choice_course',
-                   'query': StudentModel.courses.any(CourseModel.name == form.choice_course.data)},
-        'first_name': {'form': 'first_name', 'query': StudentModel.first_name == form.first_name.data},
-        'last_name': {'form': 'last_name', 'query': StudentModel.last_name == form.last_name.data}
-    }
-    create_query(form)
-
-    queries = tuple(query_dict[key]['query'] for key, value in query_dict.items() if form.data[value['form']])
+    queries = create_query(form)
     if queries and form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
     else:
