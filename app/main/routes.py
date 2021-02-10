@@ -5,11 +5,7 @@ from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
 
-# def get_form(app):
-#     with app.app_context():
-#         from app.main.forms import SearchForm
-#         form = SearchForm()
-#     return form
+
 # def flash_content(is_desc) -> tuple:
 #     """Forms params of the flash function.
 #
