@@ -1,6 +1,6 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
-from sqlalchemy import tuple_, text, and_
+from sqlalchemy import and_
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
@@ -16,19 +16,6 @@ from app.main.forms import SearchForm
 #     founded = (f'Data sorted by {sort_order}', 'primary')
 #     not_founded = ('Application did not found needed data files.', 'danger')
 #     return founded if Racer.select() else not_founded
-
-
-def get_list_for_choices(query, display_name):
-    with current_app.app_context():
-        items = [(item.name, item.name) for item in query]
-        default_choice = f'Choice {display_name}'
-        items.append(('', default_choice))
-    return items
-
-
-def populate_form_choices(form):
-    form.choice_group.choices = get_list_for_choices(GroupModel.query.all(), 'group')
-    form.choice_course.choices = get_list_for_choices(CourseModel.query.all(), 'course')
 
 
 def html_from_readme() -> str:
@@ -62,14 +49,12 @@ def create_query(form):
         'last_name': StudentModel.last_name == form.last_name.data
     }
     queries = tuple(value for key, value in query_dict.items() if form.data[key])
-    print(queries)
     return queries
 
 
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
-    populate_form_choices(form)
     queries = create_query(form)
     if queries and form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
