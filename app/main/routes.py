@@ -6,16 +6,15 @@ from app.main import bp
 from app.main.forms import SearchForm
 
 
-# def flash_content(is_desc) -> tuple:
-#     """Forms params of the flash function.
-#
-#     :param is_desc: boolean format of the sort order
-#     :return: tuple(text of a flash message, category of the message)
-#     """
-#     sort_order = 'DESC' if is_desc else 'ASC'
-#     founded = (f'Data sorted by {sort_order}', 'primary')
-#     not_founded = ('Application did not found needed data files.', 'danger')
-#     return founded if Racer.select() else not_founded
+def flash_content(is_desc) -> tuple:
+    """Forms params of the flash function.
+
+    :param is_desc: boolean format of the sort order
+    :return: tuple(text of a flash message, category of the message)
+    """
+    founded = f'Application connected to the data base'
+    not_founded = ('Application did not found needed data files.', 'danger')
+    return founded if StudentModel.select.all() else not_founded
 
 
 def html_from_readme() -> str:
