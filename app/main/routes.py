@@ -48,7 +48,7 @@ def create_query(form):
         'first_name': StudentModel.first_name == form.first_name.data,
         'last_name': StudentModel.last_name == form.last_name.data
     }
-    queries = tuple(value for key, value in query_dict.items() if form.data[key])
+    queries = tuple(value for key, value in query_dict.items() if getattr(form, key).data)
     return queries
 
 

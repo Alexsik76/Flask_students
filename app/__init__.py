@@ -32,7 +32,13 @@ def create_app(test_config=None):
     db.init_app(app)
     from app.create_db import init_app
     init_app(app)
+
     Markdown(app)
+
+    from app.main.forms import SearchForm
+    with app.app_context():
+        SearchForm.get_choices()
+
 
     return app
 
