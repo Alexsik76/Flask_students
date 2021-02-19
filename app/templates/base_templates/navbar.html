@@ -6,6 +6,9 @@
         {{ render_nav_item('main.all_students', 'Students') }}
     </div>
     <div class="navbar-nav ml-auto" title="Site map">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#searchModal">
+            {{ render_icon('search', size='1.2em') }}
+        </button>
         {{ render_nav_item('main.site_map', render_icon('diagram-3', size='1.2em')) }}
     </div>
 </nav>

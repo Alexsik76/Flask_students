@@ -1,6 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
-{% include 'base_templates/search_row.html' %}
 {{ render_table(data, show_actions=True, view_url=url_for('main.info_student', pk=':primary_key')) }}
 {% endblock %}
+{% include 'base_templates/search_modal.html' %}

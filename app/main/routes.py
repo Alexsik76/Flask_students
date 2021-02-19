@@ -6,17 +6,6 @@ from app.main import bp
 from app.main.forms import SearchForm
 
 
-def flash_content(is_desc) -> tuple:
-    """Forms params of the flash function.
-
-    :param is_desc: boolean format of the sort order
-    :return: tuple(text of a flash message, category of the message)
-    """
-    founded = f'Application connected to the data base'
-    not_founded = ('Application did not found needed data files.', 'danger')
-    return founded if StudentModel.select.all() else not_founded
-
-
 def html_from_readme() -> str:
     """ Read README.md file
 
@@ -31,12 +20,7 @@ def html_from_readme() -> str:
 @bp.route('/')
 @bp.route('/index')
 def index():
-    # select = Racer.select()
-    # rows = f'tables = {len(select)}'
-    # if rows:
-    #     flash(f'Database has "{rows}" rows. Application ready to work.', 'primary')
-    # else:
-    #     flash('Application did not found needed data files.', 'danger')
+
     return render_template('index.html', md_text=html_from_readme())
 
 
@@ -61,6 +45,16 @@ def all_students():
         data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form)
 
+
+@bp.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    queries = create_query(form)
+    if queries and form.is_submitted():
+        data = StudentModel.query.filter(and_(*queries)).all()
+    else:
+        data = StudentModel.query.all()
+    return render_template('students.html', data=data, form=form)
 
 @bp.route('/students/<pk>')
 def info_student(pk):
