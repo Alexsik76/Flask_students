@@ -1,6 +1,6 @@
 import os
 from flask import render_template, request, current_app, abort, url_for, flash
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchForm
@@ -39,22 +39,17 @@ def create_query(form):
 def all_students():
     form = SearchForm()
     queries = create_query(form)
-    if queries and form.is_submitted():
-        data = StudentModel.query.filter(and_(*queries)).all()
+    if form.is_submitted():
+        if form.group_size.data:
+            print(GroupModel.students)
+            data = GroupModel.query.filter_by(func.count(GroupModel.students).scalar() <= form.group_size.data)
+            return render_template('groups.html', data=data, form=form, search=True)
+        elif queries:
+            data = StudentModel.query.filter(and_(*queries)).all()
     else:
         data = StudentModel.query.all()
-    return render_template('students.html', data=data, form=form)
+    return render_template('students.html', data=data, form=form, search=True)
 
-
-@bp.route('/search', methods=['GET', 'POST'])
-def search():
-    form = SearchForm()
-    queries = create_query(form)
-    if queries and form.is_submitted():
-        data = StudentModel.query.filter(and_(*queries)).all()
-    else:
-        data = StudentModel.query.all()
-    return render_template('students.html', data=data, form=form)
 
 @bp.route('/students/<pk>')
 def info_student(pk):

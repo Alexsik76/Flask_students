@@ -1,10 +1,9 @@
-<!-- Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -12,9 +11,10 @@
             <div class="modal-body">
                 {% from 'bootstrap/form.html' import render_field %}
                 <form method="post" class="form">
-                    {{ render_field(form.first_name, placeholder="First name") }}
+                    {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
                     {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
                     {{ render_field(form.choice_group, form_type='inline') }}
+                    {{ render_field(form.group_size, form_type='inline') }}
                     {{ render_field(form.choice_course, form_type='inline') }}
                     {{ render_field(form.submit) }}
                 </form>
