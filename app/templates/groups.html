@@ -1,6 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
-{{ render_table(data) }}
+    {{ render_table(data, titles=titles, table_classes='table-hover', header_classes='thead-dark') }}
 {% endblock %}
 {% include 'base_templates/search_modal.html' %}

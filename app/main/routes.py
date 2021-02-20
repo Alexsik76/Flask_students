@@ -40,14 +40,19 @@ def all_students():
     form = SearchForm()
     queries = create_query(form)
     if form.is_submitted():
-        if form.group_size.data:
-            print(GroupModel.students)
-            data = GroupModel.query.filter_by(func.count(GroupModel.students).scalar() <= form.group_size.data)
-            return render_template('groups.html', data=data, form=form, search=True)
+        if size := form.group_size.data:
+            data = GroupModel.query \
+                .outerjoin(GroupModel.students) \
+                .group_by(GroupModel).having(
+                    func.count_(GroupModel.students) < size
+                ).all()
+            new_data = [item.get_dict() for item in data]
+            titles = [('name', 'Group name'), ('size', 'Group size')]
+            return render_template('groups.html', data=new_data, titles=titles,  form=form, search=True)
         elif queries:
             data = StudentModel.query.filter(and_(*queries)).all()
-    else:
-        data = StudentModel.query.all()
+        else:
+            data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form, search=True)
 
 
