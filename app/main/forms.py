@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
+from wtforms.widgets.html5 import NumberInput, RangeInput
 from app.models import GroupModel, CourseModel
 
 
@@ -17,7 +18,7 @@ class SearchForm(FlaskForm):
     first_name = StringField(u'First name')
     last_name = StringField(u'Last name')
     choice_group = SelectField(u'Groups', default='')
-    group_size = IntegerField(u'Group size', [validators.NumberRange(min=0, max=200, message=u"mast be integer")])
+    group_size = IntegerField(u'Group size', widget=RangeInput())
     choice_course = SelectField(u'Courses', default='')
     submit = SubmitField(u'Submit')
 
