@@ -2,6 +2,7 @@ from flask import Flask
 from config import app_config
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
+from flask_wtf.csrf import CSRFProtect
 from flask_restful import Api
 from flaskext.markdown import Markdown
 
@@ -9,6 +10,7 @@ from flaskext.markdown import Markdown
 bootstrap = Bootstrap()
 my_api = Api()
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 
 def create_app(test_config=None):
@@ -17,7 +19,7 @@ def create_app(test_config=None):
         app.config.from_object(app_config['testing'])
     else:
         app.config.from_object(app_config['develop'])
-
+    csrf.init_app(app)
     bootstrap.init_app(app)
 
     # # from app.api import bp as api_bp

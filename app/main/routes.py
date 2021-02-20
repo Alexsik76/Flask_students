@@ -39,8 +39,8 @@ def create_query(form):
 def all_students():
     form = SearchForm()
     queries = create_query(form)
-    if form.is_submitted():
-        if size := form.group_size.data:
+    if form.validate_on_submit():
+        if size := form.size.data:
             data = GroupModel.query \
                 .outerjoin(GroupModel.students) \
                 .group_by(GroupModel).having(
@@ -53,6 +53,8 @@ def all_students():
             data = StudentModel.query.filter(and_(*queries)).all()
         else:
             data = StudentModel.query.all()
+    else:
+        data = StudentModel.query.all()
     return render_template('students.html', data=data, form=form, search=True)
 
 

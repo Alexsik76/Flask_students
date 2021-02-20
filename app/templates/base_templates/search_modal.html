@@ -10,16 +10,12 @@
             </div>
             <div class="modal-body">
                 {% from 'bootstrap/form.html' import render_field %}
-                {% if form.group_size.data != None %}
-                    {{ form.group_size.data }}
-                    {% set is_disabled = "disabled" %}
-                {% endif %}
-
                 <form method="post" class="form">
+                    {{ form.csrf_token() }}
                     {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
                     {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
                     {{ render_field(form.choice_group, form_type='inline') }}
-                    {{ render_field(form.group_size, form_type='inline', placeholder="Group size") }}
+                    {{ render_field(form.size, form_type='inline', placeholder="Group size") }}
                     {{ render_field(form.choice_course, form_type='inline') }}
                     {{ render_field(form.submit) }}
                 </form>
@@ -27,5 +23,3 @@
         </div>
     </div>
 </div>
-
-
