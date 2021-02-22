@@ -1,6 +1,11 @@
 {% extends "base_templates/base.html" %}
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
+    {% if show_modal %}
+<h4>GGHhhh</h4>
+    <script>$('#searchModal').modal('show')</script>
+    <span class="example"  data-toggle="modal" data-target="#searchModal"></span>
+{% endif %}
 {{ render_table(data, show_actions=True,  view_url=url_for('main.info_student', pk=':primary_key')) }}
-{% endblock %}
 {% include 'base_templates/search_modal.html' %}
+{% endblock %}

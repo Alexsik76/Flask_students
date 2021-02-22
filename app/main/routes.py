@@ -1,5 +1,5 @@
 import os
-from flask import render_template, request, current_app, abort, url_for, flash
+from flask import render_template, request, current_app, abort, url_for, flash, redirect
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -39,6 +39,9 @@ def create_query(form):
 def all_students():
     form = SearchForm()
     queries = create_query(form)
+    if not form.is_submitted():
+        data = StudentModel.query.all()
+        return render_template('students.html', data=data, show_modal=True, form=form, search=True)
     if form.validate_on_submit():
         if size := form.size.data:
             data = GroupModel.query \
@@ -53,9 +56,11 @@ def all_students():
             data = StudentModel.query.filter(and_(*queries)).all()
         else:
             data = StudentModel.query.all()
+        return render_template('students.html', data=data, form=form, search=True)
+
     else:
         data = StudentModel.query.all()
-    return render_template('students.html', data=data, form=form, search=True)
+        return render_template('students.html', data=data, show_modal=True, form=form, search=True)
 
 
 @bp.route('/students/<pk>')
