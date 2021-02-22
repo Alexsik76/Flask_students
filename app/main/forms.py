@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, validators, ValidationError
+from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
 from wtforms.widgets.html5 import NumberInput, RangeInput
 from app.models import GroupModel, CourseModel
 

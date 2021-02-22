@@ -1,4 +1,5 @@
 $(document).ready(function () {
+        // $('#searchModal').modal('show');
         $('#gr').on('input change', function () {
             if ($(this).val() !== '') {
                 $('[id=st]').prop('disabled', true);

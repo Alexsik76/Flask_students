@@ -60,6 +60,7 @@ def all_students():
 
     else:
         data = StudentModel.query.all()
+        flash(form.errors['size'], 'danger')
         return render_template('students.html', data=data, show_modal=True, form=form, search=True)
 
 
