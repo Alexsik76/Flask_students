@@ -2,5 +2,5 @@
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
     {{ render_table(data, titles=titles, table_classes='table-hover', header_classes='thead-dark') }}
+    {% include 'base_templates/search_modal.html' %}
 {% endblock %}
-{% include 'base_templates/search_modal.html' %}

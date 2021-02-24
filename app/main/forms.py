@@ -18,7 +18,7 @@ class SearchForm(FlaskForm):
     first_name = StringField(u'First name')
     last_name = StringField(u'Last name')
     choice_group = SelectField(u'Groups', default='')
-    size = IntegerField(u'Group size', [validators.NumberRange(0, 200), validators.Optional()])
+    size = IntegerField(u'Group size')
     choice_course = SelectField(u'Courses', default='')
     submit = SubmitField(u'Submit')
 

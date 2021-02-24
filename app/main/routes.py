@@ -1,5 +1,5 @@
 import os
-from flask import render_template, request, current_app, abort, url_for, flash, redirect
+from flask import render_template, request, current_app, abort, url_for, flash, redirect, session
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -38,36 +38,35 @@ def create_query(form):
 @bp.route('/students', methods=['GET', 'POST'])
 def all_students():
     form = SearchForm()
+    session['form'] = form.size.data
     queries = create_query(form)
-    if not form.is_submitted():
-        data = StudentModel.query.all()
-        return render_template('students.html', data=data, form=form, search=True)
-    if form.validate_on_submit():
-        if size := form.size.data:
-            data = GroupModel.query \
-                .outerjoin(GroupModel.students) \
-                .group_by(GroupModel).having(
-                    func.count_(GroupModel.students) < size
-                ).all()
-            new_data = [item.get_dict() for item in data]
-            titles = [('name', 'Group name'), ('size', 'Group size')]
-            return render_template('groups.html', data=new_data, titles=titles,  form=form, search=True)
-        elif queries:
-            data = StudentModel.query.filter(and_(*queries)).all()
+    data = StudentModel.query.all()
+    if form.is_submitted():
+        if form.size.data:
+            return redirect(url_for('main.groups'))
         else:
-            data = StudentModel.query.all()
-        return render_template('students.html', data=data, form=form, search=True)
-
-    else:
-        data = StudentModel.query.all()
-        flash(form.errors['size'], 'danger')
-        return render_template('students.html', data=data, show_modal=True, form=form, search=True)
+            data = StudentModel.query.filter(and_(*queries)).all()
+    return render_template('students.html', data=data, form=form, search=True)
 
 
 @bp.route('/students/<pk>')
 def info_student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     return render_template('student.html', student=this_student)
+
+
+@bp.route('/groups', methods=['GET', 'POST'])
+def groups():
+    form = SearchForm()
+    size = form.size.data or session['form']
+    data = GroupModel.query \
+        .outerjoin(GroupModel.students) \
+        .group_by(GroupModel).having(
+         func.count_(GroupModel.students) <= size
+         ).all()
+    new_data = [item.get_dict() for item in data]
+    titles = [('name', 'Group name'), ('size', 'Group size')]
+    return render_template('groups.html', data=new_data, titles=titles, form=form, search=True)
 
 
 @bp.app_errorhandler(404)

@@ -15,9 +15,9 @@ $('#searchModal').on('shown.bs.modal', (function () {
     });
     bootstrapValidate('#gr', 'numeric:Please only enter numeric characters!', function (isValid) {
    if (isValid) {
-        $("#gr").addClass('has-success').removeClass('has-error');
+        $("#gr").addClass('has-success').removeClass('has-warning');
    } else {
-        $("#gr").removeClass('has-error').addClass('has-success');
+        $("#gr").removeClass('has-warning').addClass('has-success');
    }
 });
 }));
