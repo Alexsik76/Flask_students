@@ -41,7 +41,7 @@ def all_students():
     queries = create_query(form)
     if not form.is_submitted():
         data = StudentModel.query.all()
-        return render_template('students.html', data=data, show_modal=True, form=form, search=True)
+        return render_template('students.html', data=data, form=form, search=True)
     if form.validate_on_submit():
         if size := form.size.data:
             data = GroupModel.query \
