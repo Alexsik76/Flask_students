@@ -3,7 +3,7 @@ from flask import render_template, request, current_app, abort, url_for, flash, 
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchForm
+from app.main.forms import SearchStudent, SearchGroup
 
 
 def html_from_readme() -> str:
@@ -36,17 +36,13 @@ def create_query(form):
 
 
 @bp.route('/students', methods=['GET', 'POST'])
-def all_students():
-    form = SearchForm()
-    session['form'] = form.size.data
+def students():
+    form = SearchStudent()
     queries = create_query(form)
     data = StudentModel.query.all()
     if form.is_submitted():
-        if form.size.data:
-            return redirect(url_for('main.groups'))
-        else:
-            data = StudentModel.query.filter(and_(*queries)).all()
-    return render_template('students.html', data=data, form=form, search=True)
+        data = StudentModel.query.filter(and_(*queries)).all()
+    return render_template('students.html', data=data, form=form, search='students')
 
 
 @bp.route('/students/<pk>')
@@ -57,16 +53,18 @@ def info_student(pk):
 
 @bp.route('/groups', methods=['GET', 'POST'])
 def groups():
-    form = SearchForm()
-    size = form.size.data or session['form']
-    data = GroupModel.query \
-        .outerjoin(GroupModel.students) \
-        .group_by(GroupModel).having(
-         func.count_(GroupModel.students) <= size
-         ).all()
-    new_data = [item.get_dict() for item in data]
+    form = SearchGroup()
+    if form.is_submitted() and (size := form.size.data):
+        source_data = GroupModel.query \
+            .outerjoin(GroupModel.students) \
+            .group_by(GroupModel).having(
+             func.count_(GroupModel.students) <= size
+             ).all()
+    else:
+        source_data = GroupModel.query.all()
+    data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
-    return render_template('groups.html', data=new_data, titles=titles, form=form, search=True)
+    return render_template('groups.html', data=data, titles=titles, form=form, search='groups')
 
 
 @bp.app_errorhandler(404)

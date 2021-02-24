@@ -3,10 +3,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark text-light">
     <div class="navbar-nav mr-auto">
         {{ render_nav_item('main.index', render_icon("house", size="1.4em")) }}
-        {{ render_nav_item('main.all_students', 'Students') }}
+        {{ render_nav_item('main.students', 'Students') }}
+        {{ render_nav_item('main.groups', 'Groups') }}
     </div>
     <div class="navbar-nav ml-auto">
-        {% if search == True %}
+        {% if search %}
         <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#searchModal">
             {{ render_icon('search') }}
         </button>

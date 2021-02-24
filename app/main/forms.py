@@ -12,13 +12,12 @@ def get_list_for_choices(query, field_name):
     return items
 
 
-class SearchForm(FlaskForm):
+class SearchStudent(FlaskForm):
     groups = []
     courses = []
     first_name = StringField(u'First name')
     last_name = StringField(u'Last name')
     choice_group = SelectField(u'Groups', default='')
-    size = IntegerField(u'Group size')
     choice_course = SelectField(u'Courses', default='')
     submit = SubmitField(u'Submit')
 
@@ -28,9 +27,11 @@ class SearchForm(FlaskForm):
         cls.courses = get_list_for_choices(CourseModel.query.all(), 'course')
 
     def __init__(self):
-        super(SearchForm, self).__init__()
-        self.choice_group.choices = SearchForm.groups
-        self.choice_course.choices = SearchForm.courses
+        super(SearchStudent, self).__init__()
+        self.choice_group.choices = SearchStudent.groups
+        self.choice_course.choices = SearchStudent.courses
 
 
-
+class SearchGroup(FlaskForm):
+    size = IntegerField(u'Group size')
+    submit = SubmitField(u'Submit')
