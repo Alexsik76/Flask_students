@@ -1,5 +1,5 @@
 import os
-from flask import render_template, request, current_app, abort, url_for, flash, redirect, session
+from flask import render_template, current_app, url_for, flash
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -20,8 +20,8 @@ def html_from_readme() -> str:
 @bp.route('/')
 @bp.route('/index')
 def index():
-
-    return render_template('index.html', md_text=html_from_readme())
+    text = html_from_readme()
+    return render_template('index.html', md_text=text)
 
 
 def create_query(form):

@@ -41,7 +41,6 @@ def create_app(test_config=None):
     with app.app_context():
         SearchStudent.get_choices()
 
-
     return app
 
 
