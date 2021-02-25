@@ -13,15 +13,14 @@
                 <form method="post" class="form">
                     {{ form.csrf_token() }}
                     {%  if search == 'students' %}
-                    {{ render_field(form.first_name, id='st', form_type='inline', placeholder="First name") }}
-                    {{ render_field(form.last_name, id='st', form_type='inline', placeholder="Last name") }}
-                    {{ render_field(form.choice_group, id='st', form_type='inline') }}
-                    {{ render_field(form.choice_course, id='st', form_type='inline') }}
-                    {{ render_field(form.submit) }}
+                    {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
+                    {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
+                    {{ render_field(form.choice_group, form_type='inline') }}
+                    {{ render_field(form.choice_course, form_type='inline') }}
                     {% else %}
-                    {{ render_field(form.size, id='gr', form_type='inline', placeholder="Group size") }}
-                    {{ render_field(form.submit) }}
+                        {{ render_field(form.size, id='gr', form_type='inline', placeholder="Group size") }}
                     {% endif %}
+                    {{ render_field(form.submit) }}
 
                 </form>
             </div>
