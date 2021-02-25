@@ -6,21 +6,21 @@ from app.main import bp
 from app.main.forms import SearchStudent, SearchGroup
 
 
-def html_from_readme() -> str:
+def get_readme_text() -> str:
     """ Read README.md file
 
     :return: text from file
     """
     path_to_file = os.path.join(current_app.config['BASE_DIR'], 'README.md')
     with open(path_to_file, encoding='utf8') as file:
-        readme_html = file.read()
-    return readme_html
+        readme = file.read()
+    return readme
 
 
 @bp.route('/')
 @bp.route('/index')
 def index():
-    text = html_from_readme()
+    text = get_readme_text()
     return render_template('index.html', md_text=text)
 
 
@@ -54,7 +54,7 @@ def info_student(pk):
 @bp.route('/groups', methods=['GET', 'POST'])
 def groups():
     form = SearchGroup()
-    if form.is_submitted() and (size := form.size.data):
+    if form.is_submitted() and (size := form.size.data):  # TODO: there should be a simpler solution
         source_data = GroupModel.query \
             .outerjoin(GroupModel.students) \
             .group_by(GroupModel).having(
@@ -70,7 +70,7 @@ def groups():
 @bp.app_errorhandler(404)
 def page_not_found(error):
     flash(error, 'danger')
-    return render_template('index.html', md_text=html_from_readme())
+    return render_template('index.html', md_text=get_readme_text())  # TODO: how to do this with redirect?
 
 
 def has_no_empty_params(rule) -> bool:
