@@ -1,0 +1,9 @@
+from sqlalchemy import func
+Group.query.outerjoin(Group.students).group_by(Group).having(func.count(Group.students) <= 25).all()
+Group.query.filter(Group.students.any(func.count(Group.students) <= 25)).all()
+Group.query.filter(~Group.students.any(func.count(Group.students) <= 25)
+Group.query.join(Group.students).filter(func.count(Group.students) <= 25).all()
+Group.query.filter(func.count(Group.students) <= 25).all()
+Group.query.filter(Group.get_group_size() <= 25).all()
+Group.query(Group.students).all()
+Group.query.join(Group.students).group_by(Group).having(func.count(Group.students) <= 25).all()
