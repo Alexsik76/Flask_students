@@ -31,8 +31,8 @@ class StudentModel(db.Model):
     first_name = db.Column(db.String(24), index=True)
     last_name = db.Column(db.String(24), index=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group_model.id'), nullable=False)
-    group = db.relationship('GroupModel',
-                            backref=db.backref('students', lazy=True))
+    group = db.relationship('GroupModel',  lazy='select',
+                            backref=db.backref('students', lazy='dynamic'))
     courses = db.relationship('CourseModel', secondary=courses, lazy='subquery',
                               backref=db.backref('students', lazy=True))
 
