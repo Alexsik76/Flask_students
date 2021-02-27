@@ -19,6 +19,7 @@ psycopg2 = "*"
 names = "*"
 flask-wtf = "*"
 pymysql = "*"
+wtforms-alchemy = "*"
 
 [dev-packages]
 

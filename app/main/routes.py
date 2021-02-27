@@ -3,7 +3,7 @@ from flask import render_template, current_app, url_for, flash
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchStudent, SearchGroup
+from app.main.forms import SearchStudent, SearchGroup, StudentForm
 
 
 def get_readme_text() -> str:
@@ -46,9 +46,10 @@ def students():
 
 
 @bp.route('/students/<pk>')
-def info_student(pk):
+def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
-    return render_template('student.html', student=this_student)
+    form = StudentForm(obj=this_student)
+    return render_template('student.html', form=form)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

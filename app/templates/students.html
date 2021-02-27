@@ -1,6 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
-{{ render_table(data,  table_classes='table-hover', header_classes='thead-dark', view_url=url_for('main.info_student', pk=':primary_key')) }}
+{{ render_table(data,  table_classes='table-hover', header_classes='thead-dark', show_actions = True, view_url=url_for('main.student', pk=':primary_key')) }}
 {% include 'base_templates/search_modal.html' %}
 {% endblock %}

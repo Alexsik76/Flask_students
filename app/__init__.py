@@ -36,7 +36,7 @@ def create_app(test_config=None):
     init_app(app)
 
     Markdown(app)
-
+    from app.models import StudentModel
     from app.main.forms import SearchStudent
     with app.app_context():
         SearchStudent.get_choices()

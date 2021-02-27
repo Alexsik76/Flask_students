@@ -1,11 +1,5 @@
 {% extends "base_templates/base.html" %}
 {% block content %}
-<h3><strong>Student:</strong> {{ student.first_name }} {{ student.last_name }}</h3><br>
-<h3><strong>Group:</strong> {{ student.group.name }}</h3><br>
-<h3><strong>Courses:</strong></h3>
-    <ul>
-    {% for item in student.courses%}
-    <li><h4>{{ item.name }}</h4></li>
-    {% endfor %}
-    </ul>
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form) }}
 {% endblock %}

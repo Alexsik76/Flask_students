@@ -1,14 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
-from wtforms.widgets.html5 import NumberInput, RangeInput
-from app.models import GroupModel, CourseModel
+from wtforms import StringField, SubmitField, SelectField, IntegerField
+from app.models import GroupModel, CourseModel, StudentModel
+from wtforms_alchemy import ModelForm
 
 
 def get_list_for_choices(query, field_name):
     items = [(item.name, item.name) for item in query]
     default_choice = f'Choice {field_name}'
     items.append(('', default_choice))
-    print('Choices are created')
+
     return items
 
 
@@ -34,4 +34,10 @@ class SearchStudent(FlaskForm):
 
 class SearchGroup(FlaskForm):
     size = IntegerField(u'Group size')
+    submit = SubmitField(u'Submit')
+
+
+class StudentForm(FlaskForm, ModelForm):
+    class Meta:
+        model = StudentModel
     submit = SubmitField(u'Submit')
