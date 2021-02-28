@@ -21,13 +21,18 @@ def init_db():
         students_db.append(StudentModel(first_name=first_name,
                                         last_name=last_name,
                                         courses=target_courses))
-    db.session.add_all(students_db)
     groups_db = [GroupModel(name=group) for group in groups]
-    db.session.add_all(groups_db)
+
+    db.session.add_all(students_db)
+    db.session.commit()
+    students_from_db = StudentModel.query.all()
     for group in groups_db:
         for group_size in range(randint(10, 30)):
-            student = students_db.pop()
-            student.group = group
+            if students_from_db:
+                student = students_from_db.pop()
+                student.group = group
+                print(f'{student=}')
+    db.session.add_all(groups_db)
     db.session.commit()
     print('Data stored to the DB')
 

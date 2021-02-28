@@ -49,7 +49,9 @@ def students():
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    return render_template('student.html', form=form)
+    student = this_student
+    print(student.group, student.group_id)
+    return render_template('student.html', form=form, student=student)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

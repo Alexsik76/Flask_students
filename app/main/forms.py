@@ -37,7 +37,9 @@ class SearchGroup(FlaskForm):
     submit = SubmitField(u'Submit')
 
 
-class StudentForm(FlaskForm, ModelForm):
-    class Meta:
-        model = StudentModel
+class StudentForm(FlaskForm):
+    first_name = StringField(u'First name')
+    last_name = StringField(u'Last name')
+    courses = StringField(u'Courses')
+    group = StringField(u'Group')
     submit = SubmitField(u'Submit')

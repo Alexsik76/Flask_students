@@ -12,7 +12,7 @@ class CourseModel(db.Model):
     description = db.Column(db.String(124), index=True)
 
     def __repr__(self):
-        return f'<Student {self.name} {self.description}>'
+        return f'<{self.name=} {self.description=}>'
 
 
 class GroupModel(db.Model):
