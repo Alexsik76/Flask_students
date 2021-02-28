@@ -7,7 +7,7 @@
         {{ render_nav_item('main.groups', 'Groups') }}
     </div>
     <div class="navbar-nav ml-auto">
-        {% if search %}
+        {% if form %}
         <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#searchModal">
             {{ render_icon('search') }}
         </button>

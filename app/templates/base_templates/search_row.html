@@ -1,8 +1,0 @@
-{% from 'bootstrap/form.html' import render_field %}
-<form method="post" class="form-inline">
-    {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
-    {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
-    {{ render_field(form.choice_group, form_type='inline') }}
-    {{ render_field(form.choice_course, form_type='inline') }}
-    {{ render_field(form.submit) }}
-</form>

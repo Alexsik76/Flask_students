@@ -42,16 +42,14 @@ def students():
     data = StudentModel.query.all()
     if form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
-    return render_template('students.html', data=data, form=form, search='students')
+    return render_template('students.html', data=data, form=form)
 
 
 @bp.route('/students/<pk>')
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    student = this_student
-    print(student.group, student.group_id)
-    return render_template('student.html', form=form, student=student)
+    return render_template('student.html', form=form)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])
@@ -59,7 +57,7 @@ def groups():
     form = SearchGroup()
     if form.is_submitted() and (size := form.size.data):  # TODO: there should be a simpler solution
         source_data = GroupModel.query \
-            .outerjoin(GroupModel.students) \
+            .join(GroupModel.students) \
             .group_by(GroupModel).having(
              func.count_(GroupModel.students) <= size
              ).all()
@@ -67,7 +65,7 @@ def groups():
         source_data = GroupModel.query.all()
     data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
-    return render_template('groups.html', data=data, titles=titles, form=form, search='groups')
+    return render_template('groups.html', data=data, titles=titles, form=form)
 
 
 @bp.app_errorhandler(404)

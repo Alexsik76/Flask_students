@@ -31,7 +31,6 @@ def init_db():
             if students_from_db:
                 student = students_from_db.pop()
                 student.group = group
-                print(f'{student=}')
     db.session.add_all(groups_db)
     db.session.commit()
     print('Data stored to the DB')
