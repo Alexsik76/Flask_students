@@ -37,19 +37,20 @@ def create_query(form):
 
 @bp.route('/students', methods=['GET', 'POST'])
 def students():
-    form = SearchStudent()
-    queries = create_query(form)
+    search_form = SearchStudent()
+    queries = create_query(search_form)
     data = StudentModel.query.all()
-    if form.is_submitted():
+    if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
-    return render_template('students.html', data=data, form=form)
+    crud_form = StudentForm()
+    return render_template('students.html', data=data, search_form=search_form, crud_form=crud_form)
 
 
 @bp.route('/students/<pk>')
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    return render_template('student.html', form=form)
+    return render_template('base_templates/student.html', form=form)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

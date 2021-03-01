@@ -1,17 +1,16 @@
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel"
+<div class="modal fade" id="CRUD_Modal" tabindex="-1" role="dialog" aria-labelledby="CRUD_ModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <h4 class="modal-title" id="CRUD_ModalLabel">Student</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                {% block form %}{% endblock %}
+                {{ render_form(crud_form) }}
             </div>
         </div>
     </div>
 </div>
-

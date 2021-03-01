@@ -31,7 +31,7 @@ class Config(object):
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL') or f'postgresql+psycopg2://{DB_USER}:{DB_PW}@192.168.88.251:5432/{DB_NAME}'
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
