@@ -1,6 +1,10 @@
 {% extends "base_templates/base.html" %}
 {% from 'bootstrap/table.html' import render_table %}
 {% block content %}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+  Create student
+    </button>
 {{ render_table(data,  table_classes='table-hover', header_classes='thead-dark', show_actions = True, view_url=url_for('main.student', pk=':primary_key')) }}
 {% include 'base_templates/search_student.html' %}
+{% include 'base_templates/modal.html' %}
 {% endblock %}

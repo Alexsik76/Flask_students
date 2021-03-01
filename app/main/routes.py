@@ -55,7 +55,7 @@ def student(pk):
 @bp.route('/groups', methods=['GET', 'POST'])
 def groups():
     form = SearchGroup()
-    if form.is_submitted() and (size := form.size.data):  # TODO: there should be a simpler solution
+    if form.is_submitted() and (size := form.size.data):
         source_data = GroupModel.query \
             .join(GroupModel.students) \
             .group_by(GroupModel).having(
