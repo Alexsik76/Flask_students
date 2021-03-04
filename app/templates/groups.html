@@ -1,6 +1,13 @@
 {% extends "base_templates/base.html" %}
-{% from 'bootstrap/table.html' import render_table %}
 {% block content %}
     {{ render_table(data, titles=titles, table_classes='table-hover', header_classes='thead-dark') }}
-    {% include 'base_templates/search_group.html' %}
+{% endblock %}
+{% block macroses %}
+    {% call modal('search', 'Search') %}
+    <form method="post" class="form">
+        {{ search_form.csrf_token() }}
+        {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size") }}
+        {{ render_field(search_form.submit) }}
+    </form>
+    {% endcall %}
 {% endblock %}

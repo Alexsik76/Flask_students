@@ -66,7 +66,7 @@ def groups():
         source_data = GroupModel.query.all()
     data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
-    return render_template('groups.html', data=data, titles=titles, form=form)
+    return render_template('groups.html', data=data, titles=titles, search_form=form)
 
 
 @bp.app_errorhandler(404)

@@ -1,15 +1,27 @@
 {% extends "base_templates/base.html" %}
-{% from 'bootstrap/form.html' import render_form, render_field %}
 {% block content %}
     <div class="row">
         <div class="col-lg-12 my-4">
             <button type="button" class="btn btn-outline-dark float-right " data-toggle="modal"
-                    data-target="#CRUD_Modal">
+                    data-target="#create_student">
                 Create student
             </button>
         </div>
     </div>
 {{ render_table(data,  table_classes='table-hover', header_classes='thead-dark', show_actions = True, view_url=url_for('main.student', pk=':primary_key')) }}
 {% endblock %}
-{% include  'base_templates/search_student.html' %}
-{% include  'base_templates/student.html' %}
+{% block macroses %}
+    {% call modal('search', 'Search') %}
+        <form method="post" class="form">
+            {{ search_form.csrf_token() }}
+            {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
+            {{ render_field(search_form.last_name, form_type='inline', placeholder="Last name") }}
+            {{ render_field(search_form.choice_group, form_type='inline') }}
+            {{ render_field(search_form.choice_course, form_type='inline') }}
+            {{ render_field(search_form.submit) }}
+        </form>
+    {% endcall %}
+    {% call modal('create_student', 'Create student') %}
+        {{ render_form(crud_form) }}
+    {% endcall %}
+{% endblock %}

@@ -1,7 +1,0 @@
-
-    {% from 'bootstrap/form.html' import render_field%}
-    <form method="post" class="form">
-        {{ form.csrf_token() }}
-        {{ render_field(form.size, id='gr', form_type='inline', placeholder="Group size") }}
-        {{ render_field(form.submit) }}
-    </form>
