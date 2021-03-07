@@ -46,11 +46,11 @@ def students():
     return render_template('students.html', data=data, search_form=search_form, crud_form=crud_form)
 
 
-@bp.route('/students/<pk>')
+@bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    return render_template('base_templates/student.html', form=form)
+    return render_template('student.html', form=form)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])
