@@ -1,24 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% block macroses %}
-{#    {% call modal('create_student', 'Create student') %}#}
-{#        {{ render_form(form) }}#}
-{#    {% endcall %}#}
-
-
-<div class="modal fade show" id="student" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" style= "display: block"
-     aria-modal="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="ModalLabel">Student</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                {{ render_form(form) }}
-            </div>
-        </div>
-    </div>
-</div>
+    {% call modal('s_read', 'Read student') %}
+        {{ render_form(form) }}
+    {% endcall %}
 {% endblock %}

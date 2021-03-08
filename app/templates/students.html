@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-lg-12 my-4">
             <button type="button" class="btn btn-outline-dark float-right " data-toggle="modal"
-                    data-target="#create_student">
+                    data-target="#s_create">
                 Create student
             </button>
         </div>
@@ -11,7 +11,7 @@
 {{ render_table(data,  table_classes='table-hover', header_classes='thead-dark', show_actions = True, view_url=url_for('main.student', pk=':primary_key')) }}
 {% endblock %}
 {% block macroses %}
-    {% call modal('search', 'Search') %}
+    {% call modal('s_search', 'Search student') %}
         <form method="post" class="form">
             {{ search_form.csrf_token() }}
             {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
@@ -21,7 +21,7 @@
             {{ render_field(search_form.submit) }}
         </form>
     {% endcall %}
-    {% call modal('create_student', 'Create student') %}
+    {% call modal('s_create', 'Create student') %}
         {{ render_form(crud_form) }}
     {% endcall %}
 {% endblock %}

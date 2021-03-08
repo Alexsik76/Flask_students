@@ -3,7 +3,7 @@
     {{ render_table(data, titles=titles, table_classes='table-hover', header_classes='thead-dark') }}
 {% endblock %}
 {% block macroses %}
-    {% call modal('search', 'Search') %}
+    {% call modal('g_search', 'Search group') %}
     <form method="post" class="form">
         {{ search_form.csrf_token() }}
         {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size") }}
