@@ -26,8 +26,8 @@ class SearchStudent(FlaskForm):
         cls.groups = get_list_for_choices(GroupModel.query.all(), 'group')
         cls.courses = get_list_for_choices(CourseModel.query.all(), 'course')
 
-    def __init__(self):
-        super(SearchStudent, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.choice_group.choices = SearchStudent.groups
         self.choice_course.choices = SearchStudent.courses
 

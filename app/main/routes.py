@@ -49,7 +49,7 @@ def students():
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
-    form = StudentForm(obj=this_student)
+    form = SearchStudent(obj=this_student)
     return render_template('student.html', form=form)
 
 
@@ -72,7 +72,7 @@ def groups():
 @bp.app_errorhandler(404)
 def page_not_found(error):
     flash(error, 'danger')
-    return render_template('index.html', md_text=get_readme_text())  # TODO: how to do this with redirect?
+    return index()
 
 
 def has_no_empty_params(rule) -> bool:
