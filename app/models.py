@@ -12,7 +12,7 @@ class CourseModel(db.Model):
     description = db.Column(db.String(124), index=True)
 
     def __repr__(self):
-        return f'{self.name}'
+        return self.name
 
     def __str__(self):
         return self.name
@@ -41,8 +41,10 @@ class StudentModel(db.Model):
                               backref=db.backref('students', lazy=True))
     group_id = db.Column(db.Integer, db.ForeignKey('group_model.id'))
 
-    # def __repr__(self):
-    #     return f'<Student {self.first_name} {self.last_name}\n' \
-    #            f'Group {self.group.name}\n>'
-    # def __str__(self):
-    #     return f'{self.first_name} {self.last_name} {self.group.name} {self.courses}'
+    def __repr__(self):
+        return f'<Student {self.first_name} {self.last_name}\n' \
+               f'Group {self.group.name}\n>'
+
+    def __str__(self):
+        courses_str = [course.name for course in self.courses]
+        return f'{self.first_name} {self.last_name} {self.group.name} {courses_str}'
