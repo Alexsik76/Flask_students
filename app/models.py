@@ -11,8 +11,11 @@ class CourseModel(db.Model):
     name = db.Column(db.String(24), index=True)
     description = db.Column(db.String(124), index=True)
 
-    # def __repr__(self):
-    #     return f'<{self.name=} {self.description=}>'
+    def __repr__(self):
+        return f'{self.name}'
+
+    def __str__(self):
+        return self.name
 
 
 class GroupModel(db.Model):
@@ -23,8 +26,11 @@ class GroupModel(db.Model):
     def get_dict(self):
         return {'name': self.name, 'size': len(self.students)}
 
-    # def __repr__(self):
-    #     return f'<Group {self.name}>'
+    def __repr__(self):
+        return f'<Group {self.name}>'
+
+    def __str__(self):
+        return self.name
 
 
 class StudentModel(db.Model):
@@ -38,3 +44,5 @@ class StudentModel(db.Model):
     # def __repr__(self):
     #     return f'<Student {self.first_name} {self.last_name}\n' \
     #            f'Group {self.group.name}\n>'
+    # def __str__(self):
+    #     return f'{self.first_name} {self.last_name} {self.group.name} {self.courses}'

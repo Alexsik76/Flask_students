@@ -26,8 +26,8 @@ def index():
 
 def create_query(form):
     query_dict = {
-        'choice_group': StudentModel.group.has(GroupModel.name == form.choice_group.data),
-        'choice_course': StudentModel.courses.any(CourseModel.name == form.choice_course.data),
+        'group': StudentModel.group.has(GroupModel.name == form.group.data),
+        'courses': StudentModel.courses.any(CourseModel.name == form.courses.data),
         'first_name': StudentModel.first_name == form.first_name.data,
         'last_name': StudentModel.last_name == form.last_name.data
     }
@@ -49,7 +49,7 @@ def students():
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
-    form = SearchStudent(obj=this_student)
+    form = StudentForm(obj=this_student)
     return render_template('student.html', form=form)
 
 

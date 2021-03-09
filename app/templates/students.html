@@ -16,8 +16,8 @@
             {{ search_form.csrf_token() }}
             {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
             {{ render_field(search_form.last_name, form_type='inline', placeholder="Last name") }}
-            {{ render_field(search_form.choice_group, form_type='inline') }}
-            {{ render_field(search_form.choice_course, form_type='inline') }}
+            {{ render_field(search_form.group, form_type='inline') }}
+            {{ render_field(search_form.courses, form_type='inline') }}
             {{ render_field(search_form.submit) }}
         </form>
     {% endcall %}
