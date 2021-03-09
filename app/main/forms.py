@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField
+from wtforms import StringField, SubmitField, SelectField, IntegerField, FieldList
 from app.models import GroupModel, CourseModel, StudentModel
 from wtforms_alchemy import ModelForm
 
@@ -8,7 +8,7 @@ class StudentForm(FlaskForm):
     first_name = StringField(u'First name')
     last_name = StringField(u'Last name')
     group = StringField(u'Group')
-    courses = StringField(u'Courses')
+    courses = FieldList(StringField(u'Course'))
     submit = SubmitField(u'Submit')
 
 

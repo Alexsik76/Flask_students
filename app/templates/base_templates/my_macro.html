@@ -16,3 +16,14 @@
     </div>
 </div>
 {%- endmacro %}
+{%  macro select(title, items) -%}
+
+    <label for="select">{{ title }}</label>
+        <select id="select" class="custom-select" multiple size="3">
+            {% for item in items.data %}
+              <option value={{ loop.index }}>{{ item }}</option>
+            {% endfor %}
+        </select>
+
+
+{%- endmacro %}
