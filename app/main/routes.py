@@ -1,5 +1,5 @@
 import os
-from flask import render_template, current_app, url_for, flash
+from flask import render_template, current_app, url_for, flash, redirect
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -50,6 +50,11 @@ def students():
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
+    print(form.data)
+    print(form.first_name.name)
+    if form.is_submitted():
+        return redirect(url_for('main.students'), 302)
+    print('not submited')
     return render_template('student.html', form=form)
 
 

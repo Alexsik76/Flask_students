@@ -9,7 +9,7 @@ class StudentForm(FlaskForm):
     last_name = StringField(u'Last name')
     group = StringField(u'Group')
     courses = FieldList(StringField(u'Course'))
-    submit = SubmitField(u'Submit')
+    submit = SubmitField(u'Ok')
 
 
 def get_list_for_choices(query, field_name):
@@ -24,6 +24,7 @@ class SearchStudent(StudentForm):
     all_courses = []
     group = SelectField(u'Groups', default='')
     courses = SelectField(u'Courses', default='')
+    submit = SubmitField(u'Submit')
 
     @classmethod
     def get_choices(cls):

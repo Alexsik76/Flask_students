@@ -1,13 +1,12 @@
 {% extends "base_templates/base.html" %}
 {% block macroses %}
     {% call modal('s_read', 'Read student') %}
-        <form method="get" class="form">
+        <form method="post" class="form">
             {{ form.csrf_token() }}
-            {{ render_field(form.first_name, form_type='inline', placeholder="First name") }}
-            {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
-            {{ render_field(form.group, form_type='inline') }}
-            {{ select('Courses', form.courses) }}
-{#            {{ render_field(form.courses, form_type='inline') }}#}
+            {{ form_row('First name', form.first_name) }}
+            {{ form_row('Last name', form.last_name) }}
+            {{ form_row('Group', form.group) }}
+            {{ select('Courses:', form.courses)}}
             {{ render_field(form.submit) }}
         </form>
     {% endcall %}
