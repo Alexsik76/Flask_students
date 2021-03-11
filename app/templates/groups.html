@@ -6,7 +6,9 @@
     {% call modal('g_search', 'Search group') %}
     <form method="post" class="form">
         {{ search_form.csrf_token() }}
+        <div id='gr-div' >
         {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size") }}
+        </div>
         {{ render_field(search_form.submit) }}
     </form>
     {% endcall %}
