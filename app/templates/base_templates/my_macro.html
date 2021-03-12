@@ -1,7 +1,7 @@
 {% macro modal(id, title) -%}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog rounded" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="ModalLabel">{{ title }}</h4>
@@ -9,7 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body rounded">
                 {{ caller() }}
             </div>
         </div>
@@ -18,7 +18,7 @@
 {%- endmacro %}
 
 {%  macro select(title, items) -%}
-    <label for="select">{{ title }}</label>
+    <label for="select" class="text-muted">{{ title }}</label>
         <select id="select" class="custom-select" multiple size="3">
             {% for item in items.data %}
               <option value={{ loop.index }}>{{ item }}</option>
@@ -28,7 +28,7 @@
 
 {% macro form_row(placeholder, data) -%}
 <div class="form-group row">
-    <label for="{{ data.name }}" class="col-sm-4 col-form-label">{{ placeholder }}:</label>
+    <label for="{{ data.name }}" class="col-sm-4 col-form-label text-muted">{{ placeholder }}:</label>
     <div class="col-sm-6">
         <input type="text" class="form-control-plaintext" id={{ data.name }} value={{ data.data }}>
     </div>
