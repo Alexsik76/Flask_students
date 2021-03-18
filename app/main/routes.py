@@ -27,7 +27,7 @@ def index():
 def create_query(form):
     query_dict = {
         'group': StudentModel.group.has(GroupModel.name == form.group.data),
-        'courses': StudentModel.courses.any(CourseModel.name == form.courses.data),
+        'course': StudentModel.courses.any(CourseModel.name == form.course.data),
         'first_name': StudentModel.first_name == form.first_name.data,
         'last_name': StudentModel.last_name == form.last_name.data
     }
@@ -42,19 +42,16 @@ def students():
     data = StudentModel.query.all()
     if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
-    crud_form = StudentForm()
-    return render_template('students.html', data=data, search_form=search_form, crud_form=crud_form)
+    student_form = StudentForm()
+    return render_template('students.html', data=data, search_form=search_form, student_form=student_form)
 
 
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    print(form.data)
-    print(form.first_name.name)
     if form.is_submitted():
         return redirect(url_for('main.students'), 302)
-    print('not submited')
     return render_template('student.html', form=form)
 
 

@@ -7,7 +7,15 @@
             {{ form_row('Last name', form.last_name) }}
             {{ form_row('Group', form.group) }}
             {{ select('Courses:', form.courses)}}
-            {{ render_field(form.submit,  form_type="horizontal", horizontal_columns=('lg', 10, 12), button_style='outline-primary') }}
+            <div class="form-group row">
+                <div class="col-auto my-1">
+                    {{ render_field(form.choice_course, form_type='inline') }}
+                </div>
+                <div class="col-auto my-1">
+                  <button id="add_course" class="btn btn-primary mb-2">{{ render_icon('plus-square') }} Add to course</button>
+                </div>
+            </div>
+            {{ render_field(form.submit) }}
         </form>
     {% endcall %}
 {% endblock %}

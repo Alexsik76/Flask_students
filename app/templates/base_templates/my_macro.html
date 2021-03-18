@@ -18,17 +18,21 @@
 {%- endmacro %}
 
 {%  macro select(title, items) -%}
-    <label for="select" class="text-muted">{{ title }}</label>
-        <select id="select" class="custom-select" multiple size="3">
+    <div class="form-group row">
+    <label for="select" class="text-muted col-sm-4">{{ title }}</label>
+     <div class="col-sm-6">
+        <select id="select" class="custom-select" multiple size="{{ items.data | count }}">
             {% for item in items.data %}
               <option value={{ loop.index }}>{{ item }}</option>
             {% endfor %}
         </select>
+     </div>
+    </div>
 {%- endmacro %}
 
 {% macro form_row(placeholder, data) -%}
-<div class="form-group row">
-    <label for="{{ data.name }}" class="col-sm-4 col-form-label text-muted">{{ placeholder }}:</label>
+<div class="form-group row inline">
+    <label for="{{ data.name }}" class="col-sm-4 text-muted col-form-label">{{ placeholder }}:</label>
     <div class="col-sm-6">
         <input type="text" class="form-control-plaintext" id={{ data.name }} value={{ data.data }}>
     </div>

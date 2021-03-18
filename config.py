@@ -26,7 +26,7 @@ class Config(object):
     TEMPLATES_FOLDER = 'app/templates'
     BASE_DIR = basedir
     # JSON_SORT_KEYS = False
-    BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
+    # BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
     SQLALCHEMY_DATABASE_URI = os.environ.get(

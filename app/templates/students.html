@@ -17,11 +17,19 @@
             {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
             {{ render_field(search_form.last_name, form_type='inline', placeholder="Last name") }}
             {{ render_field(search_form.group, form_type='inline') }}
-            {{ render_field(search_form.courses, form_type='inline') }}
+            {{ render_field(search_form.choice_course, form_type='inline') }}
             {{ render_field(search_form.submit) }}
         </form>
     {% endcall %}
     {% call modal('s_create', 'Create student') %}
-        {{ render_form(crud_form) }}
+         <form method="post" class="form">
+            {{ student_form.csrf_token() }}
+            {{ form_row('First name', student_form.first_name) }}
+            {{ form_row('Last name', student_form.last_name) }}
+            {{ form_row('Group', student_form.group) }}
+            {{ select('Courses:', student_form.courses)}}
+            {{ render_field(student_form.choice_course, form_type='inline') }}
+            {{ render_field(student_form.submit) }}
+        </form>
     {% endcall %}
 {% endblock %}
