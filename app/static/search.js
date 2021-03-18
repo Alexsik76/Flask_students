@@ -9,10 +9,19 @@ $('#g_search').on('shown.bs.modal', (function () {
     }
  });
  }));
-
-$('#s_read').modal('show').on('shown.bs.modal', (function () {
+let student_modal = $('#s_read');
+student_modal.modal('show').on('shown.bs.modal', (function () {
     $('.form-control-plaintext').attr('readonly', true);
 }));
+student_modal.on('shown.bs.modal', (function () {
+    $('#add_course').click(function () {
+        let selected_course = $("#available_courses option:selected").text();
+        $.post('/add_course/', {course: selected_course, student_id: student_id});
+    });
+});
+
+
+
 // $('#g_search').on('shown.bs.modal', (function () {
 //     $('#gr').on('input', function () {
 //         let text1 = Number.parseInt($(this).val(), 10);

@@ -1,5 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% block macroses %}
+    <script>let student_id = {{ student_id }};</script>
     {% call modal('s_read', 'Read student') %}
         <form method="post" class="form">
             {{ form.csrf_token() }}
@@ -9,10 +10,10 @@
             {{ select('Courses:', form.courses)}}
             <div class="form-group row">
                 <div class="col-auto my-1">
-                    {{ render_field(form.choice_course, form_type='inline') }}
+                    {{ render_field(form.choice_course, form_type='inline', id='available_courses') }}
                 </div>
                 <div class="col-auto my-1">
-                  <button id="add_course" class="btn btn-primary mb-2">{{ render_icon('plus-square') }} Add to course</button>
+                  <button type="button" id="add_course" class="btn btn-primary mb-2">{{ render_icon('plus-square') }} Add to course</button>
                 </div>
             </div>
             {{ render_field(form.submit) }}

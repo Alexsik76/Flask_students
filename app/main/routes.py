@@ -1,9 +1,10 @@
 import os
-from flask import render_template, current_app, url_for, flash, redirect
+from flask import render_template, current_app, url_for, flash, redirect, request
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchStudent, SearchGroup, StudentForm
+from app import db
 
 
 def get_readme_text() -> str:
@@ -52,7 +53,19 @@ def student(pk):
     form = StudentForm(obj=this_student)
     if form.is_submitted():
         return redirect(url_for('main.students'), 302)
-    return render_template('student.html', form=form)
+    return render_template('student.html', form=form, student_id=pk)
+
+
+@bp.route('/add_course/', methods=['POST'])
+def add_course():
+    course_name = request.form['course']
+    student_id = request.form['student_id']
+    this_student = StudentModel.query.get_or_404(student_id)
+    course = CourseModel.query.filter_by(name=course_name).first()
+    this_student.courses.append(course)
+    db.session.commit()
+    flash(f'Student {this_student.name} added to the course {course_name}', 'success')
+    return student(student_id)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])
