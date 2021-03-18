@@ -17,8 +17,9 @@ student_modal.on('shown.bs.modal', (function () {
     $('#add_course').click(function () {
         let selected_course = $("#available_courses option:selected").text();
         $.post('/add_course/', {course: selected_course, student_id: student_id});
+        document.location.reload();
     });
-});
+}));
 
 
 
