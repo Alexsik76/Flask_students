@@ -9,36 +9,14 @@ $('#g_search').on('shown.bs.modal', (function () {
     }
  });
  }));
-let student_modal = $('#s_read');
-student_modal.modal('show').on('shown.bs.modal', (function () {
+
+$('#s_read').modal('show').on('shown.bs.modal', function () {
     $('.form-control-plaintext').attr('readonly', true);
-}));
-student_modal.on('shown.bs.modal', (function () {
-    $('#add_course').click(function () {
+
+});
+$('#add_course').click(function () {
         let selected_course = $("#available_courses option:selected").text();
-        $.post('/add_course/', {course: selected_course, student_id: student_id});
-        document.location.reload();
+        $.post('/add_course/', {course: selected_course, student_id: student_id}).done(function() {
+            document.location.reload();
+        });
     });
-}));
-
-
-
-// $('#g_search').on('shown.bs.modal', (function () {
-//     $('#gr').on('input', function () {
-//         let text1 = Number.parseInt($(this).val(), 10);
-//         if (text1 > 0) {
-//             $('#gr').removeClass('is-invalid').addClass('is-valid');
-//             $('#submit').attr('disabled', false);
-//         } else {
-//             let feedback = $('.form-group').find('.invalid-feedback').length;
-//             console.log((feedback))
-//             $('#gr').removeClass('is-valid').addClass('is-invalid');
-//             if (!feedback) {
-//                 $('.form-group').append(
-//                     '<div class="invalid-feedback">Please only enter numeric characters!</div>'
-//                 );
-//             }
-//             $('#submit').attr('disabled', true);
-//         }
-//     });
-// }));

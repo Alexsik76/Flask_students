@@ -56,14 +56,18 @@ def student(pk):
     return render_template('student.html', form=form, student_id=pk)
 
 
-@bp.route('/add_course/', methods=['GET', 'POST'])
+@bp.route('/add_course/', methods=['POST'])
 def add_course():
     course_name = request.form['course']
+    print(request.form)
+    print(course_name)
     student_id = request.form['student_id']
     this_student = StudentModel.query.get_or_404(student_id)
     course = CourseModel.query.filter_by(name=course_name).first()
     this_student.courses.append(course)
+    print(course)
     db.session.commit()
+    flash(f'Course {course} added.', 'success')
     return student(student_id)
 
 
