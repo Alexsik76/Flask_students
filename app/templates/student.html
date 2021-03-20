@@ -1,7 +1,8 @@
 {% extends "base_templates/base.html" %}
 {% block macroses %}
     <script>
-        let student_id = {{ student_id }};
+        let student_id = {{ student.id }};
+        let courses = {{ courses | safe }};
     </script>
     {% call modal('s_read', 'Read student') %}
         <form method="post" class="form">

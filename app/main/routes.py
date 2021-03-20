@@ -51,21 +51,19 @@ def students():
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
+    courses = [course.name for course in this_student.courses]
     if form.is_submitted():
         return redirect(url_for('main.students'), 302)
-    return render_template('student.html', form=form, student_id=pk)
+    return render_template('student.html', form=form, student=this_student, courses=courses)
 
 
 @bp.route('/add_course/', methods=['POST'])
 def add_course():
     course_name = request.form['course']
-    print(request.form)
-    print(course_name)
     student_id = request.form['student_id']
     this_student = StudentModel.query.get_or_404(student_id)
     course = CourseModel.query.filter_by(name=course_name).first()
     this_student.courses.append(course)
-    print(course)
     db.session.commit()
     flash(f'Course {course} added.', 'success')
     return student(student_id)
