@@ -62,16 +62,19 @@ def add_or_del_course():
     course_name = request.form['course']
     student_id = request.form['student_id']
     operation = request.form['operation']
-    this_student = StudentModel.query.get_or_404(student_id)
-    course = CourseModel.query.filter_by(name=course_name).first()
-    if operation == 'add':
-        this_student.courses.append(course)
-        status = 'added'
+    if not course_name or course_name == 'Choice course':
+        flash(f'Course is not selected.', 'warning')
     else:
-        this_student.courses.remove(course)
-        status = 'deleted'
-    db.session.commit()
-    flash(f'Course {course_name} {status}.', 'success')
+        this_student = StudentModel.query.get_or_404(student_id)
+        course = CourseModel.query.filter_by(name=course_name).first()
+        if operation == 'add':
+            this_student.courses.append(course)
+            status = 'added'
+        else:
+            this_student.courses.remove(course)
+            status = 'deleted'
+        db.session.commit()
+        flash(f'Course {course_name} {status}.', 'success')
     return student(student_id)
 
 
