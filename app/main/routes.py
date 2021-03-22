@@ -1,5 +1,5 @@
 import os
-from flask import render_template, current_app, url_for, flash, redirect, request
+from flask import render_template, current_app, url_for, flash, redirect, request, get_flashed_messages
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -87,7 +87,10 @@ def groups():
 
 @bp.app_errorhandler(404)
 def page_not_found(error):
-    flash(error, 'danger')
+    print(dir(error))
+    print(error.description)
+    flash(error.description, 'error')
+    # flash('Course ffff added.', 'success')
     return index()
 
 

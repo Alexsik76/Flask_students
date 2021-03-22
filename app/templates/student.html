@@ -6,6 +6,7 @@
     </script>
     {% call modal('s_read', 'Read student') %}
         <form method="post" class="form">
+            {{ render_messages() }}
             {{ form.csrf_token() }}
             {{ form_row('First name', form.first_name) }}
             {{ form_row('Last name', form.last_name) }}

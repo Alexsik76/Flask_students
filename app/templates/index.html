@@ -1,4 +1,5 @@
 {% extends "/base_templates/base.html" %}
 {% block content %}
+    {{ render_messages() }}
     {{ md_text|markdown }}
 {% endblock %}

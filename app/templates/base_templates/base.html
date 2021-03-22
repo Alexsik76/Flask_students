@@ -6,7 +6,6 @@
 {% from 'base_templates/my_macro.html' import modal, select, form_row %}
 <body style="padding-top: 50px">
 {% include 'base_templates/navbar.html' %}
-<div class="alert">{{ render_messages() }}</div>
 <main>
     <div class="jumbotron container">
         {% block content %}{% endblock %}
