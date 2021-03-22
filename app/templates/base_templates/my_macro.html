@@ -1,3 +1,4 @@
+{% from 'bootstrap/utils.html' import render_icon, render_messages %}
 {% macro modal(id, title) -%}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
@@ -19,14 +20,21 @@
 
 {%  macro select(title, items) -%}
     <div class="form-group row">
-    <label for="select" class="text-muted col-sm-4">{{ title }}</label>
-     <div class="col-sm-6">
+     <div class="col-sm-2 my-1">
+    <label for="select" class="text-muted">{{ title }}</label>
+     </div>
+     <div class="col-sm-5 my-1">
         <select id="select" class="custom-select" multiple size="{{ items.data | count }}">
             {% for item in items.data %}
               <option value={{ loop.index }}>{{ item }}</option>
             {% endfor %}
         </select>
      </div>
+        <div class="col-sm-5 my-1">
+            <button type="button" id="del_course" class="btn btn-danger">{{ render_icon('x-square') }} Delete
+                course
+            </button>
+        </div>
     </div>
 {%- endmacro %}
 

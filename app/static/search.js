@@ -23,7 +23,14 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Add selected course for the student
     $('#add_course').click(function () {
         let selected_course = $("#available_courses option:selected").text();
-        $.post('/add_course/', {course: selected_course, student_id: student_id})
+        $.post('/add_del_course/', {course: selected_course, student_id: student_id, operation: 'add'})
+            .done(function () {
+                location.reload();
+            });
+    });
+    $('#del_course').click(function () {
+        let selected_course = $("#select option:selected").text();
+        $.post('/add_del_course/', {course: selected_course, student_id: student_id, operation: 'del'})
             .done(function () {
                 location.reload();
             });

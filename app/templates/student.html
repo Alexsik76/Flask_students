@@ -2,7 +2,6 @@
 {% block macroses %}
     <script>
         let student_id = {{ student.id }};
-        let courses = {{ courses | safe }};
     </script>
     {% call modal('s_read', 'Read student') %}
         <form method="post" class="form">
@@ -13,11 +12,11 @@
             {{ form_row('Group', form.group) }}
             {{ select('Courses:', form.courses)}}
             <div class="form-group row">
-                <div class="col-auto my-1">
+                <div class="col-sm-7 my-1">
                     {{ render_field(form.choice_course, form_type='inline', id='available_courses') }}
                 </div>
-                <div class="col-auto my-1">
-                  <button type="button" id="add_course" class="btn btn-primary mb-2">{{ render_icon('plus-square') }} Add to course</button>
+                <div class="col-sm-5 my-1">
+                  <button type="button" id="add_course" class="btn btn-primary">{{ render_icon('plus-square') }} Add to course</button>
                 </div>
             </div>
             {{ render_field(form.submit) }}

@@ -57,15 +57,21 @@ def student(pk):
     return render_template('student.html', form=form, student=this_student, courses=courses)
 
 
-@bp.route('/add_course/', methods=['POST'])
-def add_course():
+@bp.route('/add_del_course/', methods=['POST'])
+def add_or_del_course():
     course_name = request.form['course']
     student_id = request.form['student_id']
+    operation = request.form['operation']
     this_student = StudentModel.query.get_or_404(student_id)
     course = CourseModel.query.filter_by(name=course_name).first()
-    this_student.courses.append(course)
+    if operation == 'add':
+        this_student.courses.append(course)
+        status = 'added'
+    else:
+        this_student.courses.remove(course)
+        status = 'deleted'
     db.session.commit()
-    flash(f'Course {course} added.', 'success')
+    flash(f'Course {course_name} {status}.', 'success')
     return student(student_id)
 
 
