@@ -21,11 +21,12 @@ class StudentForm(FlaskForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.group.choices = SearchStudent.all_groups
-        self.choice_course.choices = SearchStudent.all_courses
+        selected_courses = [str(item) for item in self.courses.data]
+        self.choice_course.choices = [choice for choice in self.all_courses if choice[0] not in selected_courses]
 
 
-def get_list_for_choices(query, field_name):
-    items = [(item.name, item.name) for item in query]
+def get_list_for_choices(values, field_name):
+    items = [(item.name, item.name) for item in values]
     default_choice = f'Choice {field_name}'
     items.append(('', default_choice))
     return items
@@ -33,7 +34,7 @@ def get_list_for_choices(query, field_name):
 
 class SearchStudent(StudentForm):
     group = SelectField(u'Groups', default='')
-    course = SelectField(u'Courses', default='')
+    choice_course = SelectField(u'Courses', default='')
     submit = SubmitField(u'Submit')
 
 

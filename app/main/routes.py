@@ -1,5 +1,5 @@
 import os
-from flask import render_template, current_app, url_for, flash, redirect, request, get_flashed_messages
+from flask import render_template, current_app, url_for, flash, redirect, request
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -28,7 +28,7 @@ def index():
 def create_query(form):
     query_dict = {
         'group': StudentModel.group.has(GroupModel.name == form.group.data),
-        'course': StudentModel.courses.any(CourseModel.name == form.course.data),
+        'choice_course': StudentModel.courses.any(CourseModel.name == form.choice_course.data),
         'first_name': StudentModel.first_name == form.first_name.data,
         'last_name': StudentModel.last_name == form.last_name.data
     }
@@ -51,31 +51,34 @@ def students():
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
-    courses = [course.name for course in this_student.courses]
     if form.is_submitted():
         return redirect(url_for('main.students'), 302)
-    return render_template('student.html', form=form, student=this_student, courses=courses)
+    return render_template('student.html', form=form, student_id=pk)
 
 
-@bp.route('/add_del_course/', methods=['POST'])
-def add_or_del_course():
-    course_name = request.form['course']
-    student_id = request.form['student_id']
-    operation = request.form['operation']
-    if not course_name or course_name == 'Choice course':
-        flash(f'Course is not selected.', 'warning')
-    else:
-        this_student = StudentModel.query.get_or_404(student_id)
-        course = CourseModel.query.filter_by(name=course_name).first()
-        if operation == 'add':
-            this_student.courses.append(course)
-            status = 'added'
-        else:
-            this_student.courses.remove(course)
-            status = 'deleted'
-        db.session.commit()
-        flash(f'Course {course_name} {status}.', 'success')
-    return student(student_id)
+def get_course_student(request_data):
+    course, student_id = request_data.form.values()
+    this_student = StudentModel.query.get_or_404(student_id)
+    course = CourseModel.query.filter_by(name=course).first()
+    return course, this_student
+
+
+@bp.route('/add_course/', methods=['POST'])
+def add_course():
+    course, student_obj = get_course_student(request)
+    student_obj.courses.append(course)
+    db.session.commit()
+    flash(f'Course {course} added.', 'success')
+    return student(student_obj.id)
+
+
+@bp.route('/del_course/', methods=['POST'])
+def del_course():
+    course, student_obj = get_course_student(request)
+    student_obj.courses.remove(course)
+    db.session.commit()
+    flash(f'Course {course} deleted.', 'success')
+    return student(student_obj.id)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])
@@ -96,10 +99,7 @@ def groups():
 
 @bp.app_errorhandler(404)
 def page_not_found(error):
-    print(dir(error))
-    print(error.description)
     flash(error.description, 'error')
-    # flash('Course ffff added.', 'success')
     return index()
 
 
