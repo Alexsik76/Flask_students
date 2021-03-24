@@ -10,18 +10,27 @@ $('#g_search').on('shown.bs.modal', (function () {
         }
     });
 }));
-
+$('.alert-success').css('margin-bottom', '0').css('padding', '0.375rem');
 // Student info form
 $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Disable del button if not selected
     let dell_button = $('#del_course');
     let used_courses = $("#select");
+    let available_courses = $('#available_courses');
+    let add_button = $('#add_course');
     if ($("#select option:selected").text() === ""){
         dell_button.attr('disabled', true);
     }
     used_courses.change(function (){
         dell_button.attr('disabled', false);
     });
+    available_courses.change(function (){
+        if ($("#available_courses option:selected").text() === "Choice course") {
+            add_button.attr('disabled', true);
+        } else {
+            add_button.attr('disabled', false);
+        }
+   });
 
     // Make text fields as readonly
     $('.form-control-plaintext').attr('readonly', true);
@@ -31,7 +40,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
         $(this).alert('close');
     });
     // Add selected course for the student
-    $('#add_course').click(function () {
+    add_button.click(function () {
         let to_add_course = $("#available_courses option:selected").text();
         $.post('/add_del_course/', {course: to_add_course, student_id: student_id, operation: 'add'})
             .done(function () {

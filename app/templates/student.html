@@ -3,23 +3,36 @@
     <script>
         let student_id = {{ student.id }};
     </script>
-    {% call modal('s_read', 'Read student') %}
+    {% call modal('s_read', 'Student') %}
         <form method="post" class="form">
-            {{ render_messages() }}
             {{ form.csrf_token() }}
             {{ form_row('First name', form.first_name) }}
             {{ form_row('Last name', form.last_name) }}
             {{ form_row('Group', form.group) }}
-            {{ select('Courses:', form.courses)}}
-            <div class="form-group row">
-                <div class="col-sm-7 my-1">
-                    {{ render_field(form.choice_course, form_type='inline', id='available_courses') }}
+            {{ select('Courses:', form.courses) }}
+            <div class=" mb-2">
+                <fieldset class="border p-2">
+                    <legend class="w-auto text-muted h6">Add course</legend>
+                    <div class="form-group row">
+                        <div class="col-sm-7 my-1">
+                            {{ render_field(form.choice_course, form_type='inline', id='available_courses') }}
+                        </div>
+                        <div class="col-sm-5 my-1">
+                            <button type="button" id="add_course" class="btn btn-primary"
+                                    disabled>{{ render_icon('plus-square') }} Add to course
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ render_field(form.submit) }}
                 </div>
-                <div class="col-sm-5 my-1">
-                  <button type="button" id="add_course" class="btn btn-primary">{{ render_icon('plus-square') }} Add to course</button>
+                <div class="col-8 align-self-end">
+                    {{ render_messages() }}
                 </div>
             </div>
-            {{ render_field(form.submit) }}
         </form>
     {% endcall %}
 {% endblock %}
