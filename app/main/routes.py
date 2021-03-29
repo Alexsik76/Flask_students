@@ -1,5 +1,5 @@
 import os
-from flask import render_template, current_app, url_for, flash, redirect, request
+from flask import render_template, current_app, url_for, flash, redirect, request, Response, json, jsonify
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -72,13 +72,23 @@ def add_course():
     return student(student_obj.id)
 
 
+def make_response(obj):
+    courses = [str(course) for course in obj.courses]
+    available_courses = [str(av_course) for av_course in CourseModel.query.all() if str(av_course) not in courses]
+    response = jsonify(courses=courses, av_courses=available_courses)
+    return response
+
+
 @bp.route('/del_course/', methods=['POST'])
 def del_course():
     course, student_obj = get_course_student(request)
     student_obj.courses.remove(course)
     db.session.commit()
     flash(f'Course {course} deleted.', 'success')
-    return student(student_obj.id)
+    _, student_obj = get_course_student(request)
+    result = make_response(student_obj)
+    # response = Response(result, mimetype='application/json')
+    return result
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

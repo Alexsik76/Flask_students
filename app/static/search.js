@@ -54,8 +54,22 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     dell_button.click(function () {
         let to_del_course = $("#select option:selected").text();
         $.post('/del_course/', {course: to_del_course, student_id: student_id})
-            .done(function () {
-                location.reload();
+            .done(function (response) {
+                let $el = $("#select");
+                    $el.empty(); // remove old options
+                    console.log(response);
+                    $.each(response['courses'], function(key, value) {
+                        $el.append($("<option></option>")
+                         .attr("value", key).text(value));
+                    });
+                    let $el2 = $("#available_courses");
+                    $el2.empty();
+                    $.each(response['av_courses'], function(key, value) {
+                        $el2.append($("<option></option>")
+                         .attr("value", value).text(value));
+                    });
+
+                // location.reload();
             });
     });
 })

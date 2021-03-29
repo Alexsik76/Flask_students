@@ -21,8 +21,8 @@ class StudentForm(FlaskForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.group.choices = SearchStudent.all_groups
-        selected_courses = [str(item) for item in self.courses.data]
-        self.choice_course.choices = [choice for choice in self.all_courses if choice[0] not in selected_courses]
+        self.selected_courses = [str(item) for item in self.courses.data]
+        self.choice_course.choices = [choice for choice in self.all_courses if choice[0] not in self.selected_courses]
 
 
 def get_list_for_choices(values, field_name):
