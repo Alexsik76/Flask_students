@@ -3,8 +3,12 @@ from flask import render_template, current_app, url_for, flash, redirect, reques
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchStudent, SearchGroup, StudentForm
+from app.main.forms import SearchStudent, SearchGroup, StudentForm, CreateStudentForm
+from app.schemas import StudentSchema, CourseSchema, GroupSchema
 from app import db
+
+
+students_schema = StudentSchema(many=True)
 
 
 def get_readme_text() -> str:
@@ -43,8 +47,23 @@ def students():
     data = StudentModel.query.all()
     if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
-    student_form = StudentForm()
-    return render_template('students.html', data=data, search_form=search_form, student_form=student_form)
+    data_json = students_schema.dump(data)
+    return render_template('students.html', data=data_json, search_form=search_form)
+
+
+@bp.route('/create_student/', methods=['GET', 'POST'])
+def create_student():
+    create_form = CreateStudentForm()
+    if create_form.is_submitted():
+        print(create_form.data)
+        new_student = StudentModel(
+            first_name=create_form.first_name.data,
+            last_name=create_form.last_name.data
+        )
+        db.session.add(new_student)
+        db.session.commit()
+        return redirect(url_for('main.students'), 302)
+    return render_template('create_student.html', create_student=create_form)
 
 
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
@@ -52,43 +71,33 @@ def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
     if form.is_submitted():
+        print(form.data)
         return redirect(url_for('main.students'), 302)
     return render_template('student.html', form=form, student_id=pk)
 
 
 def get_course_student(request_data):
-    course, student_id = request_data.form.values()
-    this_student = StudentModel.query.get_or_404(student_id)
-    course = CourseModel.query.filter_by(name=course).first()
-    return course, this_student
-
-
-@bp.route('/add_course/', methods=['POST'])
-def add_course():
-    course, student_obj = get_course_student(request)
-    student_obj.courses.append(course)
-    db.session.commit()
-    flash(f'Course {course} added.', 'success')
-    return student(student_obj.id)
+    course = CourseModel.query.filter_by(name=request_data.form['course']).first()
+    this_student = StudentModel.query.get_or_404(request_data.form['student_id'])
+    return course, this_student, request_data.form['process']
 
 
 def make_response(obj):
-    courses = [str(course) for course in obj.courses]
-    available_courses = [str(av_course) for av_course in CourseModel.query.all() if str(av_course) not in courses]
-    response = jsonify(courses=courses, av_courses=available_courses)
-    return response
+    courses = CourseModel.query.with_parent(obj).all()
+    available_courses_json = [str(av_course) for av_course in CourseModel.query.all() if av_course not in courses]
+    courses_json = [str(course) for course in courses]
+    return jsonify(courses=courses_json, av_courses=available_courses_json)
 
 
-@bp.route('/del_course/', methods=['POST'])
-def del_course():
-    course, student_obj = get_course_student(request)
-    student_obj.courses.remove(course)
+@bp.route('/process_course/', methods=['POST'])
+def process_course():
+    course, student_obj, process = get_course_student(request)
+    if process == 'add':
+        student_obj.courses.append(course)
+    else:
+        student_obj.courses.remove(course)
     db.session.commit()
-    flash(f'Course {course} deleted.', 'success')
-    _, student_obj = get_course_student(request)
-    result = make_response(student_obj)
-    # response = Response(result, mimetype='application/json')
-    return result
+    return make_response(student_obj)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

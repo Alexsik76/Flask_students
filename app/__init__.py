@@ -1,6 +1,7 @@
 from flask import Flask
 from config import app_config
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
 from flask_restful import Api
@@ -10,6 +11,7 @@ from flaskext.markdown import Markdown
 bootstrap = Bootstrap()
 my_api = Api()
 db = SQLAlchemy()
+ma = Marshmallow()
 csrf = CSRFProtect()
 
 
@@ -34,6 +36,8 @@ def create_app(test_config=None):
     db.init_app(app)
     from app.create_db import init_app
     init_app(app)
+
+    ma.init_app(app)
 
     Markdown(app)
     from app.models import StudentModel

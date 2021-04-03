@@ -1,0 +1,11 @@
+{% extends "base_templates/base.html" %}
+{% block macroses %}
+    {% call modal('s_create', 'Create student') %}
+         <form method="post" class="form" >
+            {{ create_student.csrf_token() }}
+             {{ render_field(create_student.first_name, form_type='inline', placeholder="First name") }}
+            {{ render_field(create_student.last_name, form_type='inline', placeholder="Last name") }}
+            {{ render_field(create_student.submit_c) }}
+        </form>
+    {% endcall %}
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends "base_templates/base.html" %}
 {% block content %}
-    {{ render_table(data, titles=titles, table_classes='table-hover', header_classes='thead-dark') }}
+    {{ render_table(data, titles=titles, header_classes='thead-dark') }}
 {% endblock %}
 {% block macroses %}
     {% call modal('g_search', 'Search group') %}

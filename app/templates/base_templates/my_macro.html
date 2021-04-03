@@ -1,4 +1,5 @@
 {% from 'bootstrap/utils.html' import render_icon, render_messages %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
 {% macro modal(id, title) -%}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
@@ -18,13 +19,13 @@
 </div>
 {%- endmacro %}
 
-{%  macro select(title, items) -%}
+{%  macro select(title, id, items) -%}
     <div class="form-group row">
      <div class="col-sm-2 my-1">
-    <label for="select" class="text-muted">{{ title }}</label>
+    <label for={{ id }} class="text-muted">{{ title }}</label>
      </div>
      <div class="col-sm-5 my-1">
-        <select id="select" class="custom-select" multiple size="{{ items.data | count }}">
+        <select id={{ id }} class="custom-select" multiple size="{{ items.data | count }}">
             {% for item in items.data %}
               <option value={{ loop.index }}>{{ item }}</option>
             {% endfor %}
@@ -43,4 +44,30 @@
     <label for="{{ data.name }}" class="col-sm-4 text-muted col-form-label">{{ placeholder }}:</label>
     <input type="text" class="form-control-plaintext col-sm-4" id={{ data.name }} value={{ data.data }}>
 </div>
+{%- endmacro %}
+
+{% macro render_my_table(data) -%}
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Group</th>
+        <th scope="col">Courses</th>
+{#        <th scope="col">Detail</th>#}
+    </tr>
+  </thead>
+  <tbody>
+  {% for student in data %}
+      <tr onclick="window.location.href = '{{ url_for("main.student", pk=student["id"])}}';">
+      <th scope="row" >{{ student['id'] }}</th>
+          <td>{{ student['first_name'] }}</td>
+          <td>{{ student['last_name'] }}</td>
+          <td>{{ student['group'] }}</td>
+          <td>{{ student['courses']|join(', ') }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {%- endmacro %}

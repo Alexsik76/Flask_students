@@ -9,7 +9,7 @@
             {{ form_row('First name', form.first_name) }}
             {{ form_row('Last name', form.last_name) }}
             {{ form_row('Group', form.group) }}
-            {{ select('Courses:', form.courses) }}
+            {{ select('Courses:', 'courses', form.courses) }}
             <div class=" mb-2">
                 <fieldset class="border p-2">
                     <legend class="w-auto text-muted h6">Add course</legend>
@@ -27,10 +27,10 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    {{ render_field(form.submit) }}
+                    {{ render_field(form.submit_i) }}
                 </div>
                 <div class="col-8 align-self-end">
-                    {{ render_messages() }}
+                    <div class="alert alert-success" id="modal-alert" role="alert"></div>
                 </div>
             </div>
         </form>
