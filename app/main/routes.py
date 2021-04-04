@@ -55,7 +55,6 @@ def students():
 def create_student():
     create_form = CreateStudentForm()
     if create_form.is_submitted():
-        print(create_form.data)
         new_student = StudentModel(
             first_name=create_form.first_name.data,
             last_name=create_form.last_name.data

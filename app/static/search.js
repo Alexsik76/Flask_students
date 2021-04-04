@@ -25,10 +25,16 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     let $add_button = $('#add_course');
     let $alert = $('.alert');
 
-    function animate_border(color) {
-        let original_color = $courses.css('border-left-color');
-        $courses.animate({borderColor: color}, 400, 'linear')
-            .delay(400).animate({borderColor: original_color}, 1800, 'linear');
+
+    // function animate_border(color) {
+    //     $courses.addClass("shadow").delay(1000).queue(function () {
+    //         $(this).removeClass("shadow").dequeue();
+    //     });
+    // }
+    function add_focus() {
+        $courses.focus().delay(1000).queue(function () {
+            $(this).blur().dequeue();
+        });
     }
 
     function switch_buttons() {
@@ -74,7 +80,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
-                animate_border('green');
+                add_focus();
                 $alert.text("Course added").fadeIn(500).fadeOut(2000);
             });
     });
@@ -87,7 +93,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
-                animate_border('red');
+                add_focus();
                 $alert.text("Course deleted").fadeIn(500).fadeOut(2000);
             });
     });
