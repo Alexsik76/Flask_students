@@ -25,7 +25,11 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     let $add_button = $('#add_course');
     let $alert = $('.alert');
 
-    function switch_buttons() {
+    // function animate_border () {
+    //     $courses.addClass('border-danger')
+    // }
+
+    function switch_buttons () {
         if ($("#courses option:selected").text() === "") {
             $dell_button.attr('disabled', true);
         }
@@ -68,6 +72,10 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
+                $courses.addClass('border-success');
+                setTimeout(function () {
+                    $courses.removeClass('border-success');
+                }, 800);
                 $alert.text("Course added").fadeIn(500).fadeOut(2000);
             });
     });
@@ -80,6 +88,10 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
+                $courses.addClass('border-danger').delay(2000);
+                setTimeout(function () {
+                    $courses.removeClass('border-danger');
+                }, 800);
                 $alert.text("Course deleted").fadeIn(500).fadeOut(2000);
 
             });
