@@ -72,7 +72,6 @@ def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
     if form.is_submitted():
-        print(form.data)
         return redirect(url_for('main.students'), 302)
     return render_template('student.html', form=form, student_id=pk)
 
