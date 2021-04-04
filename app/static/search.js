@@ -15,6 +15,15 @@ $('#modal-alert').css({
     'padding': '0.375rem',
     'display': 'none'
 });
+
+$('#main_table').ready(function () {
+    let $tableRow = $('#main_table th:contains("'+last_modified+'")').closest("tr");
+    $('html, body').animate({
+                    scrollTop: $tableRow.offset().top
+                }, 1000);
+});
+
+// Student create form
 $('#s_create').modal('show');
 // Student info form
 $('#s_read').modal('show').on('shown.bs.modal', function () {

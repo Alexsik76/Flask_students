@@ -1,5 +1,5 @@
 import os
-from flask import render_template, current_app, url_for, flash, redirect, request, Response, json, jsonify
+from flask import render_template, current_app, url_for, flash, redirect, request, Response, json, jsonify, session
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -48,7 +48,8 @@ def students():
     if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
     data_json = students_schema.dump(data)
-    return render_template('students.html', data=data_json, search_form=search_form)
+    last_modified = session['last_modified'] or 1
+    return render_template('students.html', data=data_json, search_form=search_form, l_m=last_modified)
 
 
 @bp.route('/create_student/', methods=['GET', 'POST'])
@@ -61,6 +62,7 @@ def create_student():
         )
         db.session.add(new_student)
         db.session.commit()
+        session['last_modified'] = new_student.id
         return redirect(url_for('main.students'), 302)
     return render_template('create_student.html', create_student=create_form)
 
