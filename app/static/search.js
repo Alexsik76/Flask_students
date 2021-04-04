@@ -19,17 +19,20 @@ $('#s_create').modal('show');
 // Student info form
 $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Disable del button if not selected
-    let $courses = $("#courses");
+    let $courses = $('#courses');
     let $dell_button = $('#del_course');
     let $av_courses = $('#available_courses');
     let $add_button = $('#add_course');
     let $alert = $('.alert');
 
-    // function animate_border () {
-    //     $courses.addClass('border-danger')
-    // }
+    function animate_border(color) {
+        let original_color = $courses.css('background-color');
+        console.log(original_color, color);
+        $courses.animate({backgroundColor: color}, 400, 'linear')
+            .delay(400).animate({backgroundColor: original_color}, 2800, 'linear');
+    }
 
-    function switch_buttons () {
+    function switch_buttons() {
         if ($("#courses option:selected").text() === "") {
             $dell_button.attr('disabled', true);
         }
@@ -72,10 +75,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
-                $courses.addClass('border-success');
-                setTimeout(function () {
-                    $courses.removeClass('border-success');
-                }, 800);
+                animate_border('green');
                 $alert.text("Course added").fadeIn(500).fadeOut(2000);
             });
     });
@@ -88,12 +88,8 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
-                $courses.addClass('border-danger').delay(2000);
-                setTimeout(function () {
-                    $courses.removeClass('border-danger');
-                }, 800);
+                animate_border('red');
                 $alert.text("Course deleted").fadeIn(500).fadeOut(2000);
-
             });
     });
 })
