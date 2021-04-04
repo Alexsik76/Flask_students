@@ -26,10 +26,9 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     let $alert = $('.alert');
 
     function animate_border(color) {
-        let original_color = $courses.css('background-color');
-        console.log(original_color, color);
-        $courses.animate({backgroundColor: color}, 400, 'linear')
-            .delay(400).animate({backgroundColor: original_color}, 2800, 'linear');
+        let original_color = $courses.css('border-left-color');
+        $courses.animate({borderColor: color}, 400, 'linear')
+            .delay(400).animate({borderColor: original_color}, 1800, 'linear');
     }
 
     function switch_buttons() {
