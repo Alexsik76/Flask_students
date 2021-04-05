@@ -49,7 +49,8 @@ def students():
     if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
     data_json = students_schema.dump(data)
-    last_modified = session['last_modified'] or 1
+    last_modified = session.get('last_modified', 1)
+    session.pop('last_modified', None)
     return render_template('students.html', data=data_json, search_form=search_form, l_m=last_modified)
 
 

@@ -19,7 +19,7 @@ $('#modal-alert').css({
 $('#main_table').ready(function () {
     let $tableRow = $('#main_table th:contains("'+last_modified+'")').closest("tr");
     $('html, body').animate({
-                    scrollTop: $tableRow.offset().top
+                    scrollTop: ($tableRow.offset().top - 180)
                 }, 1000);
 });
 

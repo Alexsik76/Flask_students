@@ -3,8 +3,10 @@
     {% call modal('s_create', 'Create student') %}
          <form method="post" class="form" >
             {{ create_student.csrf_token() }}
-             {{ render_field(create_student.first_name, form_type='inline', placeholder="First name") }}
+            {{ render_field(create_student.first_name, form_type='inline', placeholder="First name") }}
             {{ render_field(create_student.last_name, form_type='inline', placeholder="Last name") }}
+             <p><em class="text-muted">The group will be added automatically.</em></p>
+             <p><em class="text-muted">You can add courses later from the main table.</em></p>
             {{ render_field(create_student.submit_c) }}
         </form>
     {% endcall %}
