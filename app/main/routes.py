@@ -1,4 +1,5 @@
 import os
+from random import choice
 from flask import render_template, current_app, url_for, flash, redirect, request, Response, json, jsonify, session
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
@@ -52,13 +53,26 @@ def students():
     return render_template('students.html', data=data_json, search_form=search_form, l_m=last_modified)
 
 
+def filter_groups_by_size(max_size, min_size=0):
+    filtered_groups = GroupModel.query \
+        .join(GroupModel.students) \
+        .group_by(GroupModel)\
+        .having(func.count_(GroupModel.students) <= max_size)\
+        .having(func.count_(GroupModel.students) >= min_size)\
+        .all()
+    return filtered_groups
+
+
 @bp.route('/create_student/', methods=['GET', 'POST'])
 def create_student():
     create_form = CreateStudentForm()
     if create_form.is_submitted():
+        available_groups = filter_groups_by_size(29, 9)
+        group = choice(available_groups)
         new_student = StudentModel(
             first_name=create_form.first_name.data,
-            last_name=create_form.last_name.data
+            last_name=create_form.last_name.data,
+            group=group
         )
         db.session.add(new_student)
         db.session.commit()
@@ -104,11 +118,7 @@ def process_course():
 def groups():
     form = SearchGroup()
     if form.is_submitted() and (size := form.size.data):
-        source_data = GroupModel.query \
-            .join(GroupModel.students) \
-            .group_by(GroupModel).having(
-             func.count_(GroupModel.students) <= size
-             ).all()
+        source_data = filter_groups_by_size(size)
     else:
         source_data = GroupModel.query.all()
     data = [item.get_dict() for item in source_data]

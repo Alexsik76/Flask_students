@@ -22,7 +22,6 @@ def init_db():
                                         last_name=last_name,
                                         courses=target_courses))
     groups_db = [GroupModel(name=group) for group in groups]
-
     db.session.add_all(students_db)
     db.session.commit()
     students_from_db = StudentModel.query.all()
