@@ -10,6 +10,14 @@
     <div class="jumbotron container">
         {% block content %}{% endblock %}
     </div>
+<div style="
+    position: fixed;
+    bottom: 125px;
+    right: 25px;
+    {#display: none;#}
+">
+        <button id='toTop' type="button" class="btn btn-secondary btn-sm ml-auto">{{ render_icon('arrow-up-square', size="1.5em") }}</button>
+    </div>
 </main>
 {% block macroses %}{% endblock %}
 {% include 'base_templates/footer.html' %}

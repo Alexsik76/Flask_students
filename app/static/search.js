@@ -16,11 +16,28 @@ $('#modal-alert').css({
     'display': 'none'
 });
 
+//Scroll to top
+$(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#toTop').fadeIn();
+    } else {
+        $('#toTop').fadeOut();
+    }
+});
+
+$("#toTop").click(function() {
+    $("html, body").animate({scrollTop: 0}, 1000);
+ });
+
+
+
 $('#main_table').ready(function () {
+    if (typeof last_modified !=='undefined') {
     let $tableRow = $('#main_table th:contains("'+last_modified+'")').closest("tr");
     $('html, body').animate({
                     scrollTop: ($tableRow.offset().top - 180)
                 }, 1000);
+    }
 });
 
 // Student create form
