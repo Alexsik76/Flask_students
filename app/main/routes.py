@@ -4,13 +4,13 @@ from flask import render_template, current_app, url_for, flash, redirect, reques
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchStudent, SearchGroup, StudentForm, CreateStudentForm
+from app.main.forms import SearchGroup, StudentForm, SearchStudent
 from app.schemas import StudentSchema, CourseSchema, GroupSchema
 from app import db
 
-
 students_schema = StudentSchema(many=True)
 courses_schema = CourseSchema(many=True)
+
 
 def get_readme_text() -> str:
     """ Read README.md file
@@ -33,7 +33,7 @@ def index():
 def create_query(form):
     query_dict = {
         'group': StudentModel.group.has(GroupModel.name == form.group.data),
-        'choice_course': StudentModel.courses.any(CourseModel.name == form.choice_course.data),
+        'av_courses': StudentModel.courses.any(CourseModel.name == form.av_courses.data),
         'first_name': StudentModel.first_name == form.first_name.data,
         'last_name': StudentModel.last_name == form.last_name.data
     }
@@ -56,16 +56,16 @@ def students():
 def filter_groups_by_size(max_size, min_size=0):
     filtered_groups = GroupModel.query \
         .join(GroupModel.students) \
-        .group_by(GroupModel)\
-        .having(func.count_(GroupModel.students) <= max_size)\
-        .having(func.count_(GroupModel.students) >= min_size)\
+        .group_by(GroupModel) \
+        .having(func.count_(GroupModel.students) <= max_size) \
+        .having(func.count_(GroupModel.students) >= min_size) \
         .all()
     return filtered_groups
 
 
 @bp.route('/create_student/', methods=['GET', 'POST'])
 def create_student():
-    create_form = CreateStudentForm()
+    create_form = StudentForm()
     if create_form.is_submitted():
         available_groups = filter_groups_by_size(29, 9)
         group = choice(available_groups)
@@ -86,32 +86,21 @@ def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
     if form.is_submitted():
-        session['last_modified'] = this_student.id
         return redirect(url_for('main.students'), 302)
     return render_template('student.html', form=form, student_id=pk)
 
 
-def get_course_student(request_data):
-    course = CourseModel.query.filter_by(name=request_data.form['course']).first()
-    this_student = StudentModel.query.get_or_404(request_data.form['student_id'])
-    return course, this_student, request_data.form['process']
-
-
-def make_response(obj):
-    courses = courses_schema.dump(obj.courses)
-    available_courses = courses_schema.dump(obj.get_av_courses())
-    return jsonify(courses=courses, av_courses=available_courses)
-
-
-@bp.route('/process_course/', methods=['POST'])
+@bp.route('/update_courses/', methods=['GET', 'POST'])
 def process_course():
-    course, student_obj, process = get_course_student(request)
-    if process == 'add':
-        student_obj.courses.append(course)
-    else:
-        student_obj.courses.remove(course)
+    course_name, student_id, action = request.form.values()
+    course = CourseModel.query.filter_by(name=course_name).first()
+    student_obj = StudentModel.query.get_or_404(student_id)
+    getattr(student_obj.courses, action)(course)
     db.session.commit()
-    return make_response(student_obj)
+    session['last_modified'] = student_obj.id
+    data = {'courses': courses_schema.dump(student_obj.courses),
+            'av_courses': courses_schema.dump(student_obj.get_av_courses())}
+    return jsonify(data)
 
 
 @bp.route('/groups', methods=['GET', 'POST'])

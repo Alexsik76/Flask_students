@@ -82,7 +82,6 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
 
     function update_courses(response) {
         $courses.empty();
-        console.log(response, response['courses'].length);
         $courses.attr("size", response['courses'].length);
         $.each(response['courses'], function (key, value) {
             $courses.append($("<option></option>")
@@ -103,7 +102,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Add selected course for the student
     $add_button.click(function () {
         let to_add_course = $("#available_courses option:selected").text();
-        $.post('/process_course/', {course: to_add_course, student_id: student_id, process: "add"})
+        $.post('/update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();
@@ -116,7 +115,7 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Delete selected course for the student
     $dell_button.click(function () {
         let to_del_course = $("#courses option:selected").text();
-        $.post('/process_course/', {course: to_del_course, student_id: student_id, process: "remove"})
+        $.post('/update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
             .done(function (response) {
                 update_courses(response);
                 switch_buttons();

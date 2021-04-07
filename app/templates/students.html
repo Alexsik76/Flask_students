@@ -19,8 +19,8 @@
             {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
             {{ render_field(search_form.last_name, form_type='inline', placeholder="Last name") }}
             {{ render_field(search_form.group, form_type='inline') }}
-            {{ render_field(search_form.choice_course, form_type='inline') }}
-            {{ render_field(search_form.submit_s) }}
+            {{ render_field(search_form.av_courses, form_type='inline') }}
+            {{ render_field(search_form.submit) }}
         </form>
     {% endcall %}
 {% endblock %}

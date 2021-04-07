@@ -8,8 +8,8 @@ class StudentForm(FlaskForm):
     last_name = StringField(u'Last name')
     group = StringField(u'Group')
     courses = FieldList(StringField(u'Courses'))
-    choice_course = SelectField(u'Add courses', default='')
-    submit_i = SubmitField(u'Ok')
+    av_courses = SelectField(u'Add courses', default='')
+    submit = SubmitField(u'Ok')
 
     @classmethod
     def get_choices(cls):
@@ -18,9 +18,12 @@ class StudentForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.group.choices = SearchStudent.all_groups
+        self.group.choices = StudentForm.all_groups
         self.selected_courses = [str(item) for item in self.courses.data]
-        self.choice_course.choices = [choice for choice in self.all_courses if choice[0] not in self.selected_courses]
+        if student := kwargs.get('obj', None):
+            self.av_courses.choices = get_list_for_choices(student.get_av_courses(), 'course')
+        else:
+            self.av_courses.choices = StudentForm.all_courses
 
 
 def get_list_for_choices(values, field_name):
@@ -30,16 +33,14 @@ def get_list_for_choices(values, field_name):
     return items
 
 
-class CreateStudentForm(FlaskForm):
-    first_name = StringField(u'First name')
-    last_name = StringField(u'Last name')
-    submit_c = SubmitField(u'Create')
-
-
+# class CreateStudentForm(FlaskForm):
+#     first_name = StringField(u'First name')
+#     last_name = StringField(u'Last name')
+#     submit_c = SubmitField(u'Create')
+#
+#
 class SearchStudent(StudentForm):
     group = SelectField(u'Groups', default='')
-    choice_course = SelectField(u'Courses', default='')
-    submit_s = SubmitField(u'Submit')
 
 
 class SearchGroup(FlaskForm):

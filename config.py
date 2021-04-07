@@ -33,7 +33,8 @@ class Config(object):
         'DATABASE_URL') or f'postgresql+psycopg2://{DB_USER}:{DB_PW}@192.168.88.251:5432/{DB_NAME}'
     # SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = True
 
 class DevelopmentConfig(Config):
     DEBUG = True
