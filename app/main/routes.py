@@ -1,11 +1,11 @@
 import os
 from random import choice
-from flask import render_template, current_app, url_for, flash, redirect, request, Response, json, jsonify, session
+from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchGroup, StudentBaseForm, StudentUpdateForm, SearchStudent
-from app.schemas import StudentSchema, CourseSchema, GroupSchema
+from app.schemas import StudentSchema, CourseSchema
 from app import db
 
 students_schema = StudentSchema(many=True)
@@ -81,6 +81,18 @@ def create_student():
     return render_template('create_student.html', create_student=create_form)
 
 
+@bp.route('/delete_student/', methods=['GET', 'POST'])
+def delete_student():
+    student_id = int(request.form['student_id'])
+    current_student = StudentModel.query.get_or_404(student_id)
+    neighbour = StudentModel.query.filter(StudentModel.id < student_id).order_by(StudentModel.id.desc()).first() \
+        or StudentModel.query.filter(StudentModel.id > student_id).first()
+    session['last_modified'] = neighbour.id
+    db.session.delete(current_student)
+    db.session.commit()
+    return jsonify({"success": True})
+
+
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
@@ -93,7 +105,7 @@ def student(pk):
 @bp.route('/update_courses/', methods=['GET', 'POST'])
 def process_course():
     course_name, student_id, action = request.form.values()
-    course = CourseModel.query.filter_by(name=course_name).first()
+    course = CourseModel.query.filter_by(name=course_name).first_or_404()
     student_obj = StudentModel.query.get_or_404(student_id)
     getattr(student_obj.courses, action)(course)
     db.session.commit()

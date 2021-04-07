@@ -6,9 +6,20 @@
     {% call modal('s_read', 'Student') %}
         <form method="post" class="form">
             {{ form.csrf_token() }}
-            {{ form_row('First name', form.first_name) }}
-            {{ form_row('Last name', form.last_name) }}
-            {{ form_row('Group', form.group) }}
+            <div class="form-group row inline">
+                <div class="col-sm-8">
+                    {{ form_row('First name', form.first_name) }}
+                    {{ form_row('Last name', form.last_name) }}
+                    {{ form_row('Group', form.group) }}
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" id="del_student" class="btn btn-danger">
+                        {{ render_icon('person-x', size='1.5em') }}<br>
+                        Delete student
+                    </button>
+                </div>
+            </div>
+
             {{ select('Courses:', 'courses', form.courses) }}
             <div class=" mb-2">
                 <fieldset class="border p-2">
