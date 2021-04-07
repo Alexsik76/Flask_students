@@ -4,7 +4,7 @@ from flask import render_template, current_app, url_for, flash, redirect, reques
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchGroup, StudentForm, SearchStudent
+from app.main.forms import SearchGroup, StudentBaseForm, StudentUpdateForm, SearchStudent
 from app.schemas import StudentSchema, CourseSchema, GroupSchema
 from app import db
 
@@ -65,7 +65,7 @@ def filter_groups_by_size(max_size, min_size=0):
 
 @bp.route('/create_student/', methods=['GET', 'POST'])
 def create_student():
-    create_form = StudentForm()
+    create_form = StudentBaseForm()
     if create_form.is_submitted():
         available_groups = filter_groups_by_size(29, 9)
         group = choice(available_groups)
@@ -84,7 +84,7 @@ def create_student():
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
-    form = StudentForm(obj=this_student)
+    form = StudentUpdateForm(obj=this_student)
     if form.is_submitted():
         return redirect(url_for('main.students'), 302)
     return render_template('student.html', form=form, student_id=pk)

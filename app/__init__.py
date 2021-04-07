@@ -41,9 +41,9 @@ def create_app(test_config=None):
 
     Markdown(app)
     from app.models import StudentModel
-    from app.main.forms import StudentForm
+    from app.main.forms import SearchStudent
     with app.app_context():
-        StudentForm.get_choices()
+        SearchStudent.get_choices()
 
     return app
 
