@@ -10,7 +10,7 @@ from app import db
 
 
 students_schema = StudentSchema(many=True)
-
+courses_schema = CourseSchema(many=True)
 
 def get_readme_text() -> str:
     """ Read README.md file
@@ -49,8 +49,7 @@ def students():
     if search_form.is_submitted():
         data = StudentModel.query.filter(and_(*queries)).all()
     data_json = students_schema.dump(data)
-    last_modified = session.get('last_modified', 1)
-    session.pop('last_modified', None)
+    last_modified = session.pop('last_modified', 1)
     return render_template('students.html', data=data_json, search_form=search_form, l_m=last_modified)
 
 
@@ -87,6 +86,7 @@ def student(pk):
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentForm(obj=this_student)
     if form.is_submitted():
+        session['last_modified'] = this_student.id
         return redirect(url_for('main.students'), 302)
     return render_template('student.html', form=form, student_id=pk)
 
@@ -98,10 +98,9 @@ def get_course_student(request_data):
 
 
 def make_response(obj):
-    courses = CourseModel.query.with_parent(obj).all()
-    available_courses_json = [str(av_course) for av_course in CourseModel.query.all() if av_course not in courses]
-    courses_json = [str(course) for course in courses]
-    return jsonify(courses=courses_json, av_courses=available_courses_json)
+    courses = courses_schema.dump(obj.courses)
+    available_courses = courses_schema.dump(obj.get_av_courses())
+    return jsonify(courses=courses, av_courses=available_courses)
 
 
 @bp.route('/process_course/', methods=['POST'])

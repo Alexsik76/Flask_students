@@ -48,3 +48,7 @@ class StudentModel(db.Model):
     def __str__(self):
         courses_str = [course.name for course in self.courses]
         return f'{self.first_name} {self.last_name} {self.group.name} {courses_str}'
+
+    def get_av_courses(self):
+        av_courses = CourseModel.query.filter(CourseModel.name.notin_(self.courses)).all()
+        return av_courses

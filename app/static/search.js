@@ -82,15 +82,16 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
 
     function update_courses(response) {
         $courses.empty();
+        console.log(response, response['courses'].length);
         $courses.attr("size", response['courses'].length);
         $.each(response['courses'], function (key, value) {
             $courses.append($("<option></option>")
-                .attr("value", key).text(value));
+                .attr("value", key).text(value['name']));
         });
         $av_courses.empty();
         $.each(response['av_courses'], function (key, value) {
             $av_courses.append($("<option></option>")
-                .attr("value", key).text(value));
+                .attr("value", value['name']).text(value['name']));
         });
     }
 
