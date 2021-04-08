@@ -27,6 +27,10 @@ def get_list_for_choices(values, field_name):
 
 
 class SearchStudent(StudentBaseForm):
+    """ Subclass of StudentBaseForm.
+
+
+    """
     group = SelectField(u'Groups', default='')
 
     @classmethod

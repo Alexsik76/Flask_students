@@ -4,7 +4,7 @@ from flask import render_template, current_app, url_for, flash, redirect, reques
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchGroup, StudentBaseForm, StudentUpdateForm, SearchStudent
+from app.main.forms import SearchGroup,  StudentBaseForm, SearchStudent, StudentUpdateForm
 from app.schemas import StudentSchema, CourseSchema
 from app import db
 
@@ -43,6 +43,11 @@ def create_query(form):
 
 @bp.route('/students', methods=['GET', 'POST'])
 def students():
+    """
+
+    :return:
+    :rtype:
+    """
     search_form = SearchStudent()
     queries = create_query(search_form)
     data = StudentModel.query.all()
@@ -72,7 +77,7 @@ def create_student():
         new_student = StudentModel(
             first_name=create_form.first_name.data,
             last_name=create_form.last_name.data,
-            group=group
+            group_id=group.id
         )
         db.session.add(new_student)
         db.session.commit()

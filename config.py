@@ -36,6 +36,7 @@ class Config(object):
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_SECURE = True
 
+
 class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
