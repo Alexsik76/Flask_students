@@ -2,6 +2,7 @@ import os
 from random import choice
 from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
 from sqlalchemy import and_, func
+from sqlalchemy.orm import joinedload
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchGroup,  StudentBaseForm, SearchStudent, StudentUpdateForm
@@ -127,6 +128,9 @@ def groups():
         source_data = filter_groups_by_size(size)
     else:
         source_data = GroupModel.query.all()
+    dt = GroupModel.query.all()
+    for group in dt:
+        print(group.name, '->', StudentModel.query.with_parent(group).count())
     data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
     return render_template('groups.html', data=data, titles=titles, search_form=form)
