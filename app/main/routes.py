@@ -2,7 +2,6 @@ import os
 from random import choice
 from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
 from sqlalchemy import and_, func
-from sqlalchemy.orm import joinedload
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchGroup,  StudentBaseForm, SearchStudent, StudentUpdateForm
@@ -43,20 +42,26 @@ def create_query(form):
 
 
 @bp.route('/students', methods=['GET', 'POST'])
-def students():
+def students(data=None):
     """
 
     :return:
     :rtype:
     """
-    search_form = SearchStudent()
-    queries = create_query(search_form)
-    data = StudentModel.query.all()
-    if search_form.is_submitted():
-        data = StudentModel.query.filter(and_(*queries)).all()
+    data = data or StudentModel.query.all()
     data_json = students_schema.dump(data)
-    last_modified = session.pop('last_modified', 1)
-    return render_template('students.html', data=data_json, search_form=search_form, l_m=last_modified)
+    last_modified = session.pop('last_modified', data[0].id)
+    return render_template('students.html', data=data_json, l_m=last_modified)
+
+
+@bp.route('/search_student/', methods=['GET', 'POST'])
+def search_student():
+    search_form = SearchStudent()
+    if search_form.is_submitted():
+        queries = create_query(search_form)
+        data = StudentModel.query.filter(and_(*queries)).all()
+        return students(data)
+    return render_template('search_student.html', form=search_form)
 
 
 def filter_groups_by_size(max_size, min_size=0):
@@ -128,9 +133,6 @@ def groups():
         source_data = filter_groups_by_size(size)
     else:
         source_data = GroupModel.query.all()
-    dt = GroupModel.query.all()
-    for group in dt:
-        print(group.name, '->', StudentModel.query.with_parent(group).count())
     data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
     return render_template('groups.html', data=data, titles=titles, search_form=form)

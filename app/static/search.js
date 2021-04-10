@@ -39,9 +39,6 @@ $('#main_table').ready(function () {
                 }, 1000);
     }
 });
-
-// Student create form
-$('#s_create').modal('show');
 // Student info form
 $('#s_read').modal('show').on('shown.bs.modal', function () {
     // Disable del button if not selected
@@ -129,7 +126,6 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
         $.post('/delete_student/', {student_id: student_id})
             .done(function (response) {
                 if (response["success"]){
-                    console.log($SCRIPT_ROOT)
                     window.location.replace($SCRIPT_ROOT + 'students');
                 }
             });

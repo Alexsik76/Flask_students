@@ -24,7 +24,7 @@ class GroupModel(db.Model):
     students = db.relationship('StudentModel', backref='group', lazy=True)
 
     def get_dict(self):
-        return {'name': self.name, 'size': len(self.students)}
+        return {'name': self.name, 'size': StudentModel.query.with_parent(self).count()}
 
     def __repr__(self):
         return f'<Group {self.name}>'
