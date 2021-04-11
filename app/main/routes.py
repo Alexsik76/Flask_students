@@ -138,6 +138,12 @@ def groups():
     return render_template('groups.html', data=data, titles=titles, search_form=form)
 
 
+@bp.route('/search_groups/')
+def search_groups():
+    form = SearchGroup()
+    return render_template('search_groups.html', search_form=form)
+
+
 @bp.app_errorhandler(404)
 def page_not_found(error):
     flash(error.description, 'error')

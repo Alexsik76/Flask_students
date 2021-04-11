@@ -1,5 +1,6 @@
 // Validate Group search form
 $('#g_search').on('shown.bs.modal', (function () {
+    $('.modal-body').load('/search_groups/');
     bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
         if (isValid) {
             $('#submit').attr('disabled', false);

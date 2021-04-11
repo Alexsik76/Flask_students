@@ -1,0 +1,7 @@
+{% from 'bootstrap/form.html' import render_field %}
+<form method="post" class="form">
+        {{ search_form.csrf_token() }}
+        {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size") }}
+        {{ render_field(search_form.submit) }}
+    </form>
+
