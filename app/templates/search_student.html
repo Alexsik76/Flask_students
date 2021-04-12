@@ -7,7 +7,7 @@
             {{ render_field(form.last_name, form_type='inline', placeholder="Last name") }}
             {{ render_field(form.group, form_type='inline') }}
             {{ render_field(form.av_courses, form_type='inline') }}
-            {{ render_field(form.submit) }}
+            <div class="align-self-end">{{ render_field(form.submit) }}</div>
         </form>
     {% endcall %}
 {% endblock %}

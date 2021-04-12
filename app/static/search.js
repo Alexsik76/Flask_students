@@ -1,6 +1,5 @@
 // Validate Group search form
-$('#g_search').on('shown.bs.modal', (function () {
-    $('.modal-body').load('/search_groups/');
+$('.modal').on('shown.bs.modal', (function () {
     bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
         if (isValid) {
             $('#submit').attr('disabled', false);
@@ -30,6 +29,9 @@ $("#toTop").click(function() {
     $("html, body").animate({scrollTop: 0}, 1000);
  });
 
+$("#search_group_btn").click(function () {
+    $('.modal-body').load('/search_groups/');
+});
 
 
 $('#main_table').ready(function () {
