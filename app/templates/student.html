@@ -1,48 +1,48 @@
-{% extends "base_templates/base.html" %}
-{% block macroses %}
-    <script>
-        let student_id = {{ student_id }};
-    </script>
-    {% call modal('s_read', 'Student') %}
-        <form method="post" class="form">
-            {{ form.csrf_token() }}
-            <div class="form-group row inline">
-                <div class="col-sm-8">
-                    {{ form_row('First name', form.first_name) }}
-                    {{ form_row('Last name', form.last_name) }}
-                    {{ form_row('Group', form.group) }}
+<script>
+    let student_id = {{ student_id }};
+</script>
+{% from 'bootstrap/form.html' import render_field %}
+{% from 'base_templates/my_macro.html' import select, form_row %}
+{% from 'bootstrap/utils.html' import render_icon, render_messages %}
+<form method="post" class="form">
+    {{ form.csrf_token() }}
+    <div class="form-group row inline">
+        <div class="col-sm-8">
+            {{ form_row('First name', form.first_name) }}
+            {{ form_row('Last name', form.last_name) }}
+            {{ form_row('Group', form.group) }}
+        </div>
+        <div class="col-sm-3">
+            <button type="button" id="del_student" class="btn btn-danger">
+                {{ render_icon('person-x', size='1.5em') }}<br>
+                Delete student
+            </button>
+        </div>
+    </div>
+    {{ select('Courses:', 'courses', form.courses) }}
+    <div class=" mb-2">
+        <fieldset class="border p-2">
+            <legend class="w-auto text-muted h6">Add course</legend>
+            <div class="form-group row">
+                <div class="col-sm-7 my-1">
+                    {{ render_field(form.av_courses, form_type='inline', id='available_courses') }}
                 </div>
-                <div class="col-sm-3">
-                    <button type="button" id="del_student" class="btn btn-danger">
-                        {{ render_icon('person-x', size='1.5em') }}<br>
-                        Delete student
+                <div class="col-sm-5 my-1">
+                    <button type="button" id="add_course" class="btn btn-primary"
+                            disabled>{{ render_icon('plus-square') }} Add to course
                     </button>
                 </div>
             </div>
-            {{ select('Courses:', 'courses', form.courses) }}
-            <div class=" mb-2">
-                <fieldset class="border p-2">
-                    <legend class="w-auto text-muted h6">Add course</legend>
-                    <div class="form-group row">
-                        <div class="col-sm-7 my-1">
-                            {{ render_field(form.av_courses, form_type='inline', id='available_courses') }}
-                        </div>
-                        <div class="col-sm-5 my-1">
-                            <button type="button" id="add_course" class="btn btn-primary"
-                                    disabled>{{ render_icon('plus-square') }} Add to course
-                            </button>
-                        </div>
-                    </div>
-                </fieldset>
+        </fieldset>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            {{ render_field(form.submit) }}
+        </div>
+        <div class="col-8 align-self-end">
+            <div class="alert alert-success" id="modal-alert" role="alert"
+                 style="margin-bottom:0; padding:0.375rem; display: none">
             </div>
-            <div class="row">
-                <div class="col-4">
-                    {{ render_field(form.submit) }}
-                </div>
-                <div class="col-8 align-self-end">
-                    <div class="alert alert-success" id="modal-alert" role="alert"></div>
-                </div>
-            </div>
-        </form>
-    {% endcall %}
-{% endblock %}
+        </div>
+    </div>
+</form>

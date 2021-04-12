@@ -19,7 +19,9 @@
         <button id='toTop' type="button" class="btn btn-secondary btn-sm ml-auto">{{ render_icon('arrow-up-square', size="1.5em") }}</button>
     </div>
 </main>
-{% block macroses %}{% endblock %}
+{% block macroses %}
+{{ modal() }}
+{% endblock %}
 {% include 'base_templates/footer.html' %}
 <meta name="csrf-token" content="{{ csrf_token() }}">
     {% block scripts %}

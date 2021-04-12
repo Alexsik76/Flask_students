@@ -1,23 +1,8 @@
 // Validate Group search form
-$('.modal').on('shown.bs.modal', (function () {
-    bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
-        if (isValid) {
-            $('#submit').attr('disabled', false);
-            $('#gr').removeClass('is-invalid').addClass('is-valid');
-        } else {
-            $('#submit').attr('disabled', true);
-            $('#gr').removeClass('is-valid');
-        }
-    });
-}));
-$('#modal-alert').css({
-    'margin-bottom': '0',
-    'padding': '0.375rem',
-    'display': 'none'
-});
+
 
 //Scroll to top
-$(window).scroll(function() {
+$(window).scroll(function () {
     if ($(this).scrollTop()) {
         $('#toTop').fadeIn();
     } else {
@@ -25,26 +10,43 @@ $(window).scroll(function() {
     }
 });
 
-$("#toTop").click(function() {
+$("#toTop").click(function () {
     $("html, body").animate({scrollTop: 0}, 1000);
- });
+});
+
 
 $("#search_group_btn").click(function () {
+    $('#ModalLabel span').text('Search groups');
     $('.modal-body').load('/search_groups/');
 });
 
-
 $('#main_table').ready(function () {
-    if (typeof last_modified !=='undefined') {
-    let $tableRow = $('#main_table th:contains("'+last_modified+'")').closest("tr");
-    $('html, body').animate({
-                    scrollTop: ($tableRow.offset().top - 180)
-                }, 1000);
+    $("#main_table tr").click(function () {
+        let $clickedRowId = $(this).children("th").text();
+        $('#ModalLabel span').text('Student info');
+        $('.modal-body').load('/students/' + $clickedRowId)
+    });
+    if (typeof last_modified !== 'undefined') {
+        let $tableRow = $('#main_table th:contains("' + last_modified + '")').closest("tr");
+        $('html, body').animate({
+            scrollTop: ($tableRow.offset().top - 180)
+        }, 1000);
     }
 });
-// Student info form
-$('#s_read').modal('show').on('shown.bs.modal', function () {
-    // Disable del button if not selected
+
+
+$('.modal').on('shown.bs.modal', function () {
+    $("#gr").on("focus", function () {
+        bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
+            if (isValid) {
+                $('#submit').attr('disabled', false);
+                $('#gr').removeClass('is-invalid').addClass('is-valid');
+            } else {
+                $('#submit').attr('disabled', true);
+                $('#gr').removeClass('is-valid');
+            }
+        });
+    });
     let $courses = $('#courses');
     let $dell_course_btn = $('#del_course');
     let $av_courses = $('#available_courses');
@@ -52,11 +54,6 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     let $alert = $('.alert');
     let $del_student_btn = $('#del_student');
 
-    // function animate_border(color) {
-    //     $courses.addClass("shadow").delay(1000).queue(function () {
-    //         $(this).removeClass("shadow").dequeue();
-    //     });
-    // }
     function add_focus() {
         $courses.focus().delay(1000).queue(function () {
             $(this).blur().dequeue();
@@ -111,7 +108,6 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
             });
     });
 
-
     // Delete selected course for the student
     $dell_course_btn.click(function () {
         let to_del_course = $("#courses option:selected").text();
@@ -125,12 +121,15 @@ $('#s_read').modal('show').on('shown.bs.modal', function () {
     });
 
     // Delete curent student
-    $del_student_btn.click(function (){
+    $del_student_btn.click(function () {
         $.post('/delete_student/', {student_id: student_id})
             .done(function (response) {
-                if (response["success"]){
+                if (response["success"]) {
                     window.location.replace($SCRIPT_ROOT + 'students');
                 }
             });
     });
 });
+
+
+
