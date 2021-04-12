@@ -1,7 +1,7 @@
 {% from 'bootstrap/form.html' import render_field %}
-<form method="post" id="search_group_frm" class="form">
-        {{ search_form.csrf_token() }}
-        {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size", autocomplete="off") }}
-        {{ render_field(search_form.submit, form_type="horizontal", horizontal_columns=('lg', 9, 2)) }}
-    </form>
+<form method="post" action="{{ url_for('main.search_groups') }}" id="search_group_frm" class="form">
+    {{ search_form.csrf_token() }}
+    {{ render_field(search_form.size, id='gr', form_type='inline', placeholder="Group size", autocomplete="off") }}
+    {{ render_field(search_form.submit, form_type="horizontal", horizontal_columns=('lg', 9, 2)) }}
+</form>
 

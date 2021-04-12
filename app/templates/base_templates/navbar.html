@@ -6,10 +6,21 @@
         {{ render_nav_item('main.groups', 'Groups') }}
     </div>
     <div class="navbar-nav ml-auto">
-        {% if search_form %}
+        {% if data_groups %}
         <button type="button" id="search_group_btn" class="btn btn-dark" data-toggle="modal" data-target=".modal">
             {{ render_icon('search') }}
         </button>
+        {% elif data_students %}
+            <div class="row">
+        <div class="col-lg-12 my-6">
+            <button type="button" id="search_student_btn" class="btn btn-dark" data-toggle="modal" data-target=".modal">
+            {{ render_icon('search') }}
+        </button>
+            <button type="button" id="create_student_btn" class="btn btn-dark" data-toggle="modal" data-target=".modal">
+            {{ render_icon('person-plus', size='1.2em') }}
+        </button>
+        </div>
+    </div>
         {% endif %}
         {{ render_nav_item('main.site_map', render_icon('diagram-3', size='1.2em')) }}
     </div>

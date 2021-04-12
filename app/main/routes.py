@@ -51,7 +51,7 @@ def students(data=None):
     data = data or StudentModel.query.all()
     data_json = students_schema.dump(data)
     last_modified = session.pop('last_modified', data[0].id)
-    return render_template('students.html', data=data_json, l_m=last_modified)
+    return render_template('students.html', data_students=data_json, l_m=last_modified)
 
 
 @bp.route('/search_student/', methods=['GET', 'POST'])
@@ -126,21 +126,20 @@ def process_course():
     return jsonify(data)
 
 
-@bp.route('/groups', methods=['GET', 'POST'])
+@bp.route('/groups/')
 def groups():
-    form = SearchGroup()
-    if form.is_submitted() and (size := form.size.data):
-        source_data = filter_groups_by_size(size)
-    else:
-        source_data = GroupModel.query.all()
+    source_data = filter_groups_by_size(request.args.get('size') or 100)
     data = [item.get_dict() for item in source_data]
     titles = [('name', 'Group name'), ('size', 'Group size')]
-    return render_template('groups.html', data=data, titles=titles, search_form=form)
+    return render_template('groups.html', data_groups=data, titles=titles)
 
 
-@bp.route('/search_groups/')
+@bp.route('/search_groups/', methods=['GET', 'POST'])
 def search_groups():
     form = SearchGroup()
+    if form.is_submitted():
+        size = form.size.data
+        return redirect(url_for('main.groups', size=size))
     return render_template('search_groups.html', search_form=form)
 
 

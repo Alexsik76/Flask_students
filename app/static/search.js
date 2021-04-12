@@ -19,6 +19,14 @@ $("#search_group_btn").click(function () {
     $('#ModalLabel span').text('Search groups');
     $('.modal-body').load('/search_groups/');
 });
+$("#search_student_btn").click(function () {
+    $('#ModalLabel span').text('Search student');
+    $('.modal-body').load('/search_student/');
+});
+$("#create_student_btn").click(function () {
+    $('#ModalLabel span').text('Create student');
+    $('.modal-body').load('/create_student/');
+});
 
 $('#main_table').ready(function () {
     $("#main_table tr").click(function () {
