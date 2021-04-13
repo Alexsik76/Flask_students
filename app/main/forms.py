@@ -32,6 +32,7 @@ class SearchStudent(StudentBaseForm):
 
     """
     group = SelectField(u'Groups', default='')
+    submit_search = SubmitField(u'Search')
 
     @classmethod
     def get_choices(cls):

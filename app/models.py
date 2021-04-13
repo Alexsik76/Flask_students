@@ -50,7 +50,7 @@ class StudentModel(db.Model):
         return f'{self.first_name} {self.last_name} {self.group.name} {courses_str}'
 
     def get_av_courses(self):
-        my_courses = map(str, self.courses)
+        my_courses = map(str, self.courses)  # TODO: Should be easier
         av_courses = CourseModel.query\
             .filter(CourseModel.name.notin_(my_courses)).all()
         return av_courses

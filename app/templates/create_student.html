@@ -1,5 +1,5 @@
 {% from 'bootstrap/form.html' import render_field %}
-<form method="post" class="form">
+<form method="post" action="{{ url_for('main.create_student') }}" class="form">
     {{ create_student.csrf_token() }}
     {{ render_field(create_student.first_name, form_type='inline', placeholder="First name") }}
     {{ render_field(create_student.last_name, form_type='inline', placeholder="Last name") }}

@@ -17,11 +17,11 @@ $("#toTop").click(function () {
 
 $("#search_group_btn").click(function () {
     $('#ModalLabel span').text('Search groups');
-    $('.modal-body').load('/search_groups/');
+    $('.modal-body').load('/groups/?needed_form=search_groups');
 });
 $("#search_student_btn").click(function () {
     $('#ModalLabel span').text('Search student');
-    $('.modal-body').load('/search_student/');
+    $('.modal-body').load('/students?needed_form=search_student');
 });
 $("#create_student_btn").click(function () {
     $('#ModalLabel span').text('Create student');

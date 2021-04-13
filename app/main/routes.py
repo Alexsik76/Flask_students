@@ -1,5 +1,6 @@
 import os
 from random import choice
+from functools import wraps
 from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
@@ -41,29 +42,6 @@ def create_query(form):
     return queries
 
 
-@bp.route('/students', methods=['GET', 'POST'])
-def students(data=None):
-    """
-
-    :return:
-    :rtype:
-    """
-    data = data or StudentModel.query.all()
-    data_json = students_schema.dump(data)
-    last_modified = session.pop('last_modified', data[0].id)
-    return render_template('students.html', data_students=data_json, l_m=last_modified)
-
-
-@bp.route('/search_student/', methods=['GET', 'POST'])
-def search_student():
-    search_form = SearchStudent()
-    if search_form.is_submitted():
-        queries = create_query(search_form)
-        data = StudentModel.query.filter(and_(*queries)).all()
-        return students(data)
-    return render_template('search_student.html', form=search_form)
-
-
 def filter_groups_by_size(max_size, min_size=0):
     filtered_groups = GroupModel.query \
         .join(GroupModel.students) \
@@ -72,6 +50,44 @@ def filter_groups_by_size(max_size, min_size=0):
         .having(func.count_(GroupModel.students) >= min_size) \
         .all()
     return filtered_groups
+
+
+def with_search_modal(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        form_dict = {
+            'search_groups': (SearchGroup(), 'search_groups.html'),
+            'search_student': (SearchStudent(), 'search_student.html')
+        }
+        if form_name := request.args.get('needed_form'):
+            form, template = form_dict[form_name]
+            return render_template(template, search_form=form)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@bp.route('/students/', methods=['GET', 'POST'])
+@with_search_modal
+def students():
+    search_form = SearchStudent()
+    if search_form.is_submitted() and search_form.submit_search.data:
+        queries = create_query(search_form)
+        data = StudentModel.query.filter(and_(*queries)).order_by('id').all()
+    else:
+        data = StudentModel.query.order_by('id').all()
+    data_json = students_schema.dump(data)
+    last_modified = session.pop('last_modified', data[0].id)
+    return render_template('students.html', data_students=data_json, l_m=last_modified)
+
+
+@bp.route('/groups/', methods=['GET', 'POST'])
+@with_search_modal
+def groups():
+    search_form = SearchGroup()
+    source_data = filter_groups_by_size(search_form.size.data or 100)
+    data = [item.get_dict() for item in source_data]
+    titles = [('name', 'Group name'), ('size', 'Group size')]
+    return render_template('groups.html', data_groups=data, titles=titles)
 
 
 @bp.route('/create_student/', methods=['GET', 'POST'])
@@ -83,8 +99,7 @@ def create_student():
         new_student = StudentModel(
             first_name=create_form.first_name.data,
             last_name=create_form.last_name.data,
-            group_id=group.id
-        )
+            group_id=group.id)
         db.session.add(new_student)
         db.session.commit()
         session['last_modified'] = new_student.id
@@ -96,8 +111,7 @@ def create_student():
 def delete_student():
     student_id = int(request.form['student_id'])
     current_student = StudentModel.query.get_or_404(student_id)
-    neighbour = StudentModel.query.filter(StudentModel.id < student_id).order_by(StudentModel.id.desc()).first() \
-        or StudentModel.query.filter(StudentModel.id > student_id).first()
+    neighbour = StudentModel.query.filter(StudentModel.id > student_id).first() or StudentModel.query.first()
     session['last_modified'] = neighbour.id
     db.session.delete(current_student)
     db.session.commit()
@@ -126,27 +140,10 @@ def process_course():
     return jsonify(data)
 
 
-@bp.route('/groups/')
-def groups():
-    source_data = filter_groups_by_size(request.args.get('size') or 100)
-    data = [item.get_dict() for item in source_data]
-    titles = [('name', 'Group name'), ('size', 'Group size')]
-    return render_template('groups.html', data_groups=data, titles=titles)
-
-
-@bp.route('/search_groups/', methods=['GET', 'POST'])
-def search_groups():
-    form = SearchGroup()
-    if form.is_submitted():
-        size = form.size.data
-        return redirect(url_for('main.groups', size=size))
-    return render_template('search_groups.html', search_form=form)
-
-
 @bp.app_errorhandler(404)
 def page_not_found(error):
     flash(error.description, 'error')
-    return index()
+    return redirect(url_for('main.index'), 302)
 
 
 def has_no_empty_params(rule) -> bool:
