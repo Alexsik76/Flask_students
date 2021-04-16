@@ -32,12 +32,9 @@ $('#main_table').ready(function () {
     $("#main_table tr").click(function () {
         let $clickedRowId = $(this).children("th").text();
         $('#ModalLabel span').text('Student info');
-        $('.modal-body').load('/students/' + $clickedRowId, function (data, status){
-            console.log(status);
-            if (status == 'success'){
-                process_modal(student_id=$clickedRowId);
-            }
-        });
+        $('.modal-body').load('/students/' + $clickedRowId);
+        student_id = $clickedRowId;
+
     });
     if (typeof last_modified !== 'undefined') {
         let $tableRow = $('#main_table th:contains("' + last_modified + '")').closest("tr");
@@ -47,8 +44,8 @@ $('#main_table').ready(function () {
     }
 });
 
-function process_modal(student_id=undefined) {
-$('.modal').on('shown.bs.modal', function () {
+$('.modal-body').on('ready', function () {
+    console.log('selected');
     $("#gr").on("focus", function () {
         bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
             if (isValid) {
@@ -60,74 +57,65 @@ $('.modal').on('shown.bs.modal', function () {
             }
         });
     });
-    let $courses = $('#courses');
-    let $dell_course_btn = $('#del_course');
-    let $av_courses = $('#available_courses');
-    let $add_course_btn = $('#add_course');
-    let $alert = $('.alert');
-    let $del_student_btn = $('#del_student');
 
     function add_focus() {
-        $courses.focus().delay(1000).queue(function () {
+        $('#courses').focus().delay(1000).queue(function () {
             $(this).blur().dequeue();
         });
     }
-
     function switch_buttons() {
         if ($("#courses option:selected").text() === "") {
-            $dell_course_btn.attr('disabled', true);
+            $('#del_course').attr('disabled', true);
         }
-        $courses.change(function () {
-            $dell_course_btn.attr('disabled', false);
+        $('#courses').change(function () {
+            $('#del_course').attr('disabled', false);
         });
         if ($("#available_courses option:selected").text() === "Choice course") {
-            $add_course_btn.attr('disabled', true);
+            $('#add_course').attr('disabled', true);
         } else {
-            $add_course_btn.attr('disabled', false);
+            $('#add_course').attr('disabled', false);
         }
-        $av_courses.change(function () {
-            $add_course_btn.attr('disabled', false);
+        $('#available_courses').change(function () {
+            $('#add_course').attr('disabled', false);
         });
     }
+
+    switch_buttons();
 
     function update_courses2(response) {
         let $div_form = $('#student_form');
         let new_form = response['new_template'];
         $div_form.html(new_form);
+            add_focus();
+            switch_buttons();
     }
 
     // Make text fields as readonly
     $('.form-control-plaintext').attr('readonly', true);
 
-    switch_buttons();
 
     // Add selected course for the student
-    $add_course_btn.click(function () {
-        console.log(student_id);
+    $('#add_course').click(function () {
         let to_add_course = $("#available_courses option:selected").text();
         $.post('/update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
             .done(function (response) {
                 update_courses2(response);
-                switch_buttons();
-                add_focus();
-                $alert.text("Course added").fadeIn(500).fadeOut(2000);
+                $('.alert').text("Course added").fadeIn(500).fadeOut(2000);
             });
     });
 
     // Delete selected course for the student
-    $dell_course_btn.click(function () {
+    $('#del_course').click(function () {
         let to_del_course = $("#courses option:selected").text();
         $.post('/update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
             .done(function (response) {
                 update_courses2(response);
-                switch_buttons();
-                add_focus();
-                $alert.text("Course deleted").fadeIn(500).fadeOut(2000);
+                $('.alert').text("Course deleted").fadeIn(500).fadeOut(2000);
             });
     });
 
     // Delete curent student
-    $del_student_btn.click(function () {
+    $('#del_student').click(function () {
         $.post('/delete_student/', {student_id: student_id})
             .done(function (response) {
                 if (response["success"]) {
@@ -136,6 +124,5 @@ $('.modal').on('shown.bs.modal', function () {
             });
     });
 });
-}
 
 
