@@ -44,7 +44,7 @@ $('#main_table').ready(function () {
     }
 });
 
-$('.modal-body').on('ready', function () {
+$('.modal').on('shown.bs.modal form_updated', function () {
     console.log('selected');
     $("#gr").on("focus", function () {
         bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
@@ -85,7 +85,7 @@ $('.modal-body').on('ready', function () {
     function update_courses2(response) {
         let $div_form = $('#student_form');
         let new_form = response['new_template'];
-        $div_form.html(new_form);
+        $div_form.html(new_form).trigger('form_updated');
             add_focus();
             switch_buttons();
     }
