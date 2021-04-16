@@ -1,9 +1,9 @@
-{% from 'bootstrap/form.html' import render_field %}
+{% from 'bootstrap/form.html' import render_field%}
 <form method="post" class="form">
     {{ search_form.csrf_token() }}
-    {{ render_field(search_form.first_name, form_type='inline', placeholder="First name") }}
-    {{ render_field(search_form.last_name, form_type='inline', placeholder="Last name") }}
-    {{ render_field(search_form.group, form_type='inline') }}
-    {{ render_field(search_form.av_courses, form_type='inline') }}
-    <div class="align-self-end">{{ render_field(search_form.submit_search) }}</div>
+    {{ render_field(search_form.first_name, placeholder="Jon") }}
+    {{ render_field(search_form.last_name, placeholder="Snow") }}
+    {{ render_field(search_form.group) }}
+    {{ render_field(search_form.av_courses) }}
+    <div class="float-right">{{ render_field(search_form.submit_search) }}</div>
 </form>

@@ -47,4 +47,4 @@ class SearchStudent(StudentBaseForm):
 
 class SearchGroup(FlaskForm):
     size = IntegerField(u'Group size')
-    submit = SubmitField(u'Submit')
+    submit = SubmitField(u'Search')

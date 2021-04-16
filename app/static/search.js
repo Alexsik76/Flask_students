@@ -21,7 +21,7 @@ $("#search_group_btn").click(function () {
 });
 $("#search_student_btn").click(function () {
     $('#ModalLabel span').text('Search student');
-    $('.modal-body').load('/students?needed_form=search_student');
+    $('.modal-body').load('/students/?needed_form=search_student');
 });
 $("#create_student_btn").click(function () {
     $('#ModalLabel span').text('Create student');
@@ -32,7 +32,12 @@ $('#main_table').ready(function () {
     $("#main_table tr").click(function () {
         let $clickedRowId = $(this).children("th").text();
         $('#ModalLabel span').text('Student info');
-        $('.modal-body').load('/students/' + $clickedRowId)
+        $('.modal-body').load('/students/' + $clickedRowId, function (data, status){
+            console.log(status);
+            if (status == 'success'){
+                process_modal(student_id=$clickedRowId);
+            }
+        });
     });
     if (typeof last_modified !== 'undefined') {
         let $tableRow = $('#main_table th:contains("' + last_modified + '")').closest("tr");
@@ -42,7 +47,7 @@ $('#main_table').ready(function () {
     }
 });
 
-
+function process_modal(student_id=undefined) {
 $('.modal').on('shown.bs.modal', function () {
     $("#gr").on("focus", function () {
         bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
@@ -85,18 +90,10 @@ $('.modal').on('shown.bs.modal', function () {
         });
     }
 
-    function update_courses(response) {
-        $courses.empty();
-        $courses.attr("size", response['courses'].length);
-        $.each(response['courses'], function (key, value) {
-            $courses.append($("<option></option>")
-                .attr("value", key).text(value['name']));
-        });
-        $av_courses.empty();
-        $.each(response['av_courses'], function (key, value) {
-            $av_courses.append($("<option></option>")
-                .attr("value", value['name']).text(value['name']));
-        });
+    function update_courses2(response) {
+        let $div_form = $('#student_form');
+        let new_form = response['new_template'];
+        $div_form.html(new_form);
     }
 
     // Make text fields as readonly
@@ -106,10 +103,11 @@ $('.modal').on('shown.bs.modal', function () {
 
     // Add selected course for the student
     $add_course_btn.click(function () {
+        console.log(student_id);
         let to_add_course = $("#available_courses option:selected").text();
         $.post('/update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
             .done(function (response) {
-                update_courses(response);
+                update_courses2(response);
                 switch_buttons();
                 add_focus();
                 $alert.text("Course added").fadeIn(500).fadeOut(2000);
@@ -121,7 +119,7 @@ $('.modal').on('shown.bs.modal', function () {
         let to_del_course = $("#courses option:selected").text();
         $.post('/update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
             .done(function (response) {
-                update_courses(response);
+                update_courses2(response);
                 switch_buttons();
                 add_focus();
                 $alert.text("Course deleted").fadeIn(500).fadeOut(2000);
@@ -138,6 +136,6 @@ $('.modal').on('shown.bs.modal', function () {
             });
     });
 });
-
+}
 
 

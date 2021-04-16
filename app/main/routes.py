@@ -2,6 +2,7 @@ import os
 from random import choice
 from functools import wraps
 from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
+from jinja2 import Environment
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
@@ -135,9 +136,10 @@ def process_course():
     getattr(student_obj.courses, action)(course)
     db.session.commit()
     session['last_modified'] = student_obj.id
-    data = {'courses': courses_schema.dump(student_obj.courses),
-            'av_courses': courses_schema.dump(student_obj.get_av_courses())}
-    return jsonify(data)
+    new_form = StudentUpdateForm(obj=student_obj, formdata=None)
+    new_template = render_template('student.html', form=new_form, student_id=student_id)
+    data2 = {'new_template': new_template}
+    return jsonify(data2)
 
 
 @bp.app_errorhandler(404)

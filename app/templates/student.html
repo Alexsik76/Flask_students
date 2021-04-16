@@ -1,6 +1,4 @@
-<script>
-    let student_id = {{ student_id }};
-</script>
+<div id="student_form">
 {% from 'bootstrap/form.html' import render_field %}
 {% from 'base_templates/my_macro.html' import select, form_row %}
 {% from 'bootstrap/utils.html' import render_icon, render_messages %}
@@ -19,12 +17,14 @@
             </button>
         </div>
     </div>
+    <div id="div_courses">
     {{ select('Courses:', 'courses', form.courses) }}
+    </div>
     <div class=" mb-2">
         <fieldset class="border p-2">
             <legend class="w-auto text-muted h6">Add course</legend>
             <div class="form-group row">
-                <div class="col-sm-7 my-1">
+                <div class="col-sm-7 my-1" id="div_av_courses">
                     {{ render_field(form.av_courses, form_type='inline', id='available_courses') }}
                 </div>
                 <div class="col-sm-5 my-1">
@@ -46,3 +46,4 @@
         </div>
     </div>
 </form>
+</div>
