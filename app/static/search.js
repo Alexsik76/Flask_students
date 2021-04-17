@@ -1,41 +1,39 @@
-// Validate Group search form
-
-
-//Scroll to top
-$(window).scroll(function () {
+//Main buttons events
+$("#search_group_btn").click(function () {
+    fill_modal('Search groups', '/groups/?needed_form=search_groups');
+});
+$("#search_student_btn").click(function () {
+    fill_modal('Search student', '/students/?needed_form=search_student');
+});
+$("#create_student_btn").click(function () {
+    fill_modal('Create student', '/create_student/');
+});
+$(window).scroll(function () { // Disable button if on top.
     if ($(this).scrollTop()) {
         $('#toTop').fadeIn();
     } else {
         $('#toTop').fadeOut();
     }
 });
-
 $("#toTop").click(function () {
     $("html, body").animate({scrollTop: 0}, 1000);
 });
 
-
-$("#search_group_btn").click(function () {
-    $('#ModalLabel span').text('Search groups');
-    $('.modal-body').load('/groups/?needed_form=search_groups');
-});
-$("#search_student_btn").click(function () {
-    $('#ModalLabel span').text('Search student');
-    $('.modal-body').load('/students/?needed_form=search_student');
-});
-$("#create_student_btn").click(function () {
-    $('#ModalLabel span').text('Create student');
-    $('.modal-body').load('/create_student/');
-});
+// Fill modal by button or row click
+function fill_modal(label, path) {
+    $('#ModalLabel span').text(label);
+    $('.modal-body').load(path);
+}
 
 $('#main_table').ready(function () {
+    // Show student modal by click on row
     $("#main_table tr").click(function () {
         let $clickedRowId = $(this).children("th").text();
-        $('#ModalLabel span').text('Student info');
-        $('.modal-body').load('/students/' + $clickedRowId);
+        fill_modal('Student info', '/students/' + $clickedRowId);
         student_id = $clickedRowId;
-
     });
+
+    // Scroll to last modified row
     if (typeof last_modified !== 'undefined') {
         let $tableRow = $('#main_table th:contains("' + last_modified + '")').closest("tr");
         $('html, body').animate({
@@ -45,7 +43,11 @@ $('#main_table').ready(function () {
 });
 
 $('.modal').on('shown.bs.modal form_updated', function () {
-    console.log('selected');
+
+    // Make text fields as readonly
+    $('.form-control-plaintext').attr('readonly', true);
+
+    // Validate field of the search group form (is integer)
     $("#gr").on("focus", function () {
         bootstrapValidate('#gr', 'integer:Please only enter integer characters!', function (isValid) {
             if (isValid) {
@@ -58,48 +60,30 @@ $('.modal').on('shown.bs.modal form_updated', function () {
         });
     });
 
-    function add_focus() {
+    // Disable buttons if course not chnged
+    $('#del_course').attr('disabled', true);
+    $('#courses').change(function () {
+        $('#del_course').attr('disabled', false);
+    });
+    $('#add_course').attr('disabled', true);
+    $('#available_courses').change(function () {
+        $('#add_course').attr('disabled', false);
+    });
+
+    // Update form after add or dell course
+    function update_courses(response) {
+        $('#student_form').html(response['new_template']).trigger('form_updated');
         $('#courses').focus().delay(1000).queue(function () {
             $(this).blur().dequeue();
         });
     }
-    function switch_buttons() {
-        if ($("#courses option:selected").text() === "") {
-            $('#del_course').attr('disabled', true);
-        }
-        $('#courses').change(function () {
-            $('#del_course').attr('disabled', false);
-        });
-        if ($("#available_courses option:selected").text() === "Choice course") {
-            $('#add_course').attr('disabled', true);
-        } else {
-            $('#add_course').attr('disabled', false);
-        }
-        $('#available_courses').change(function () {
-            $('#add_course').attr('disabled', false);
-        });
-    }
-
-    switch_buttons();
-
-    function update_courses2(response) {
-        let $div_form = $('#student_form');
-        let new_form = response['new_template'];
-        $div_form.html(new_form).trigger('form_updated');
-            add_focus();
-            switch_buttons();
-    }
-
-    // Make text fields as readonly
-    $('.form-control-plaintext').attr('readonly', true);
-
 
     // Add selected course for the student
     $('#add_course').click(function () {
         let to_add_course = $("#available_courses option:selected").text();
         $.post('/update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
             .done(function (response) {
-                update_courses2(response);
+                update_courses(response);
                 $('.alert').text("Course added").fadeIn(500).fadeOut(2000);
             });
     });
@@ -109,7 +93,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
         let to_del_course = $("#courses option:selected").text();
         $.post('/update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
             .done(function (response) {
-                update_courses2(response);
+                update_courses(response);
                 $('.alert').text("Course deleted").fadeIn(500).fadeOut(2000);
             });
     });
@@ -124,5 +108,3 @@ $('.modal').on('shown.bs.modal form_updated', function () {
             });
     });
 });
-
-
