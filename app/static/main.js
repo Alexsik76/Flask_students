@@ -6,7 +6,7 @@ $("#search_student_btn").click(function () {
     fill_modal('Search student', '/students/?needed_form=search_student');
 });
 $("#create_student_btn").click(function () {
-    fill_modal('Create student', '/create_student/');
+    fill_modal('Create student', '/_create_student/');
 });
 $(window).scroll(function () { // Disable button if on top.
     if ($(this).scrollTop()) {
@@ -81,7 +81,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
     // Add selected course for the student
     $('#add_course').click(function () {
         let to_add_course = $("#available_courses option:selected").text();
-        $.post('/update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
+        $.post('/_update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
             .done(function (response) {
                 update_courses(response);
                 $('.alert').text("Course added").fadeIn(500).fadeOut(2000);
@@ -91,7 +91,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
     // Delete selected course for the student
     $('#del_course').click(function () {
         let to_del_course = $("#courses option:selected").text();
-        $.post('/update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
+        $.post('/_update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
             .done(function (response) {
                 update_courses(response);
                 $('.alert').text("Course deleted").fadeIn(500).fadeOut(2000);
@@ -100,7 +100,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
 
     // Delete curent student
     $('#del_student').click(function () {
-        $.post('/delete_student/', {student_id: student_id})
+        $.post('/_delete_student/', {student_id: student_id})
             .done(function (response) {
                 if (response["success"]) {
                     window.location.replace($SCRIPT_ROOT + 'students');

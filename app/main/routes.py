@@ -2,16 +2,14 @@ import os
 from random import choice
 from functools import wraps
 from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
-from jinja2 import Environment
 from sqlalchemy import and_, func
 from app.models import GroupModel, CourseModel, StudentModel
 from app.main import bp
 from app.main.forms import SearchGroup,  StudentBaseForm, SearchStudent, StudentUpdateForm
-from app.schemas import StudentSchema, CourseSchema
+from app.schemas import StudentSchema
 from app import db
 
 students_schema = StudentSchema(many=True)
-courses_schema = CourseSchema(many=True)
 
 
 def get_readme_text() -> str:
@@ -91,7 +89,7 @@ def groups():
     return render_template('groups.html', data_groups=data, titles=titles)
 
 
-@bp.route('/create_student/', methods=['GET', 'POST'])
+@bp.route('/_create_student/', methods=['GET', 'POST'])
 def create_student():
     create_form = StudentBaseForm()
     if create_form.is_submitted():
@@ -108,7 +106,7 @@ def create_student():
     return render_template('create_student.html', create_student=create_form)
 
 
-@bp.route('/delete_student/', methods=['GET', 'POST'])
+@bp.route('/_delete_student/', methods=['GET', 'POST'])
 def delete_student():
     student_id = int(request.form['student_id'])
     current_student = StudentModel.query.get_or_404(student_id)
@@ -128,7 +126,7 @@ def student(pk):
     return render_template('student.html', form=form, student_id=pk)
 
 
-@bp.route('/update_courses/', methods=['GET', 'POST'])
+@bp.route('/_update_courses/', methods=['GET', 'POST'])
 def process_course():
     course_name, student_id, action = request.form.values()
     course = CourseModel.query.filter_by(name=course_name).first_or_404()
