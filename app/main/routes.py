@@ -136,8 +136,7 @@ def process_course():
     session['last_modified'] = student_obj.id
     new_form = StudentUpdateForm(obj=student_obj, formdata=None)
     new_template = render_template('student.html', form=new_form, student_id=student_id)
-    data2 = {'new_template': new_template}
-    return jsonify(data2)
+    return jsonify({'new_template': new_template})
 
 
 @bp.app_errorhandler(404)

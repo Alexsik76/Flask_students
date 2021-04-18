@@ -4,6 +4,9 @@ from app.models import GroupModel, CourseModel
 
 
 class StudentBaseForm(FlaskForm):
+    """
+    :py:class: 'SearchStudent'
+    """
     first_name = StringField(u'First name')
     last_name = StringField(u'Last name')
     av_courses = SelectField(u'Add courses', default='')
@@ -27,9 +30,8 @@ def get_list_for_choices(values, field_name):
 
 
 class SearchStudent(StudentBaseForm):
-    """ Subclass of StudentBaseForm.
-
-
+    """
+    :py:class: 'StudentBaseForm'
     """
     group = SelectField(u'Groups', default='')
     submit_search = SubmitField(u'Search')
@@ -39,7 +41,7 @@ class SearchStudent(StudentBaseForm):
         cls.all_groups = get_list_for_choices(GroupModel.query.all(), 'group')
         cls.all_courses = get_list_for_choices(CourseModel.query.all(), 'course')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.group.choices = SearchStudent.all_groups
         self.av_courses.choices = SearchStudent.all_courses
