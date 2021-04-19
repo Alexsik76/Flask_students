@@ -27,9 +27,7 @@
         <div class="col-sm-5 my-1">
             <select id={{ id }} class="custom-select" multiple size="{{ items | count }}">
                 {% for course in items %}
-                    <option value={{ loop.index }} data-toggle="tooltip" data-html="true" title="{{ course['description'] }}">
-                          {{ course['name'] }}
-                    </option>
+                    <option value={{ loop.index }} data-toggle="tooltip" data-html="true" title="{{ course['description'] }}">{{ course['name'] }}</option>
                 {% endfor %}
             </select>
         </div>

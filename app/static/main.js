@@ -60,7 +60,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
         });
     });
 
-    // Disable buttons if course not chnged
+    // Disable buttons if course not changed
     $('#del_course').attr('disabled', true);
     $('#courses').change(function () {
         $('#del_course').attr('disabled', false);
@@ -98,7 +98,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
             });
     });
 
-    // Delete curent student
+    // Delete current student
     $('#del_student').click(function () {
         $.post('/_delete_student/', {student_id: student_id})
             .done(function (response) {
