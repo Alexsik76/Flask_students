@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, FieldList
+from wtforms import Form, FormField,StringField, SubmitField, SelectField, IntegerField, FieldList
 from app.models import GroupModel, CourseModel
 
 
@@ -13,9 +13,14 @@ class StudentBaseForm(FlaskForm):
     submit = SubmitField(u'Ok')
 
 
+class CourseForm(Form):
+    name = StringField(u'Course name')
+    description = StringField(u'Description')
+
+
 class StudentUpdateForm(StudentBaseForm):
     group = StringField(u'Group')
-    courses = FieldList(StringField(u'Courses'))
+    courses = FieldList(FormField(CourseForm), u'Courses')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

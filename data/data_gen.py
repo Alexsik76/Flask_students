@@ -19,8 +19,8 @@ def get_student():
 def get_courses():
     """ Get list of courses from the local file.
 
-    :rtype: list of str
-    :return: list of courses
+    :rtype: dict
+    :return: dict {course_name: description}
     """
     with open('data/data.json') as file:
         data = json.load(file)
@@ -41,8 +41,8 @@ def generate():
     """ Generate lists of students, groups and courses of given sizes.
     Also print sizes of these lists to the console.
 
-    :rtype: (list, list, list)
-    :return: tuple of three lists.
+    :rtype: (list, list, dict)
+    :return: tuple (list[str], list[str], dict{str:str}).
     """
     students = [get_student() for _ in range(200)]
     groups = [get_group() for _ in range(10)]

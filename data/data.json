@@ -1,14 +1,14 @@
 {
- "courses": [
-  "Performing arts",
-  "Visual arts",
-  "History",
-  "Languages and literature",
-  "Law",
-  "Philosophy",
-  "Theology",
-  "Anthropology",
-  "Economics",
-  "Geography"
- ]
+  "courses": {
+    "Performing arts": "Arts such as music, dance, and drama which are performed for an audience.",
+    "Visual arts": "Art forms such as painting, drawing, printmaking, sculpture, ceramics, photography, video, filmmaking, design, crafts and architecture. Many artistic disciplines such as performing arts, conceptual art, and textile arts also involve aspects of visual arts as well as arts of other types. Also included within the visual arts are the applied arts such as industrial design, graphic design, fashion design, interior design and decorative art.",
+    "History": "The study of the past.",
+    "Languages and literature": "A language is a structured system of communication used by humans, including speech (spoken language), gestures (sign language) and writing. Literature is a method of recording, preserving, and transmitting knowledge and entertainment.",
+    "Law": "Law is a system of rules created and enforced through social or governmental institutions to regulate behavior.",
+    "Philosophy": "Is the study of general and fundamental questions, such as those about reason, existence, knowledge, values, mind, and language.",
+    "Theology": "Is the systematic study of the nature of the divine and, more broadly, of religious belief. It is taught as an academic discipline, typically in universities and seminaries.[1] It occupies itself with the unique content of analyzing the supernatural, but also deals with religious epistemology, asks and seeks to answer the question of revelation.",
+    "Anthropology": "Is the scientific study of humanity, concerned with human behavior, human biology, cultures, and societies, in both the present and past, including past human species.",
+    "Economics": "Is the social science that studies how people interact with value; in particular, the production, distribution, and consumption of goods and services.",
+    "Geography": "Is a field of science devoted to the study of the lands, features, inhabitants, and phenomena of the Earth and planets."
+  }
 }

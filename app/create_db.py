@@ -12,7 +12,7 @@ def init_db():
         db.drop_all()
     db.create_all()
     students, groups, courses = generate()
-    courses_db = [CourseModel(name=course) for course in courses]
+    courses_db = [CourseModel(name=name, description=description) for name, description in courses.items()]
     db.session.add_all(courses_db)
     students_db = []
     for student in students:
