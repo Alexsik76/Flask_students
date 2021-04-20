@@ -1,26 +1,14 @@
-import os
 from random import choice
 from functools import wraps
-from flask import render_template, current_app, url_for, flash, redirect, request, jsonify, session
-from sqlalchemy import and_, func
-from app.models import GroupModel, CourseModel, StudentModel
+from flask import render_template, url_for, flash, redirect, request, jsonify, session
+from sqlalchemy import and_
+from app.models import CourseModel, StudentModel
 from app.main import bp
-from app.main.forms import SearchGroup,  StudentBaseForm, SearchStudent, StudentUpdateForm
+from app.main.forms import SearchGroup, StudentBaseForm, SearchStudent, StudentUpdateForm
 from app.schemas import StudentSchema
 from app import db
-
+from app.main.common_funcs import get_readme_text, search_student_query, filter_groups_by_size
 students_schema = StudentSchema(many=True)
-
-
-def get_readme_text() -> str:
-    """ Read README.md file
-
-    :return: text from file
-    """
-    path_to_file = os.path.join(current_app.config['BASE_DIR'], 'README.md')
-    with open(path_to_file, encoding='utf8') as file:
-        readme = file.read()
-    return readme
 
 
 @bp.route('/')
@@ -28,27 +16,6 @@ def get_readme_text() -> str:
 def index():
     text = get_readme_text()
     return render_template('index.html', md_text=text)
-
-
-def create_query(form):
-    query_dict = {
-        'group': StudentModel.group.has(GroupModel.name == form.group.data),
-        'av_courses': StudentModel.courses.any(CourseModel.name == form.av_courses.data),
-        'first_name': StudentModel.first_name == form.first_name.data,
-        'last_name': StudentModel.last_name == form.last_name.data
-    }
-    queries = tuple(value for key, value in query_dict.items() if getattr(form, key).data)
-    return queries
-
-
-def filter_groups_by_size(max_size, min_size=0):
-    filtered_groups = GroupModel.query \
-        .join(GroupModel.students) \
-        .group_by(GroupModel) \
-        .having(func.count_(GroupModel.students) <= max_size) \
-        .having(func.count_(GroupModel.students) >= min_size) \
-        .all()
-    return filtered_groups
 
 
 def with_search_modal(f):
@@ -70,12 +37,12 @@ def with_search_modal(f):
 def students():
     search_form = SearchStudent()
     if search_form.is_submitted() and search_form.submit_search.data:
-        queries = create_query(search_form)
+        queries = search_student_query(search_form)
         data = StudentModel.query.filter(and_(*queries)).order_by('id').all()
     else:
         data = StudentModel.query.order_by('id').all()
     data_json = students_schema.dump(data)
-    last_modified = session.pop('last_modified', data[0].id)
+    last_modified = session.pop('last_modified', data[0].id if data else StudentModel.query.order_by('id').first())
     return render_template('students.html', data_students=data_json, l_m=last_modified)
 
 
@@ -108,7 +75,8 @@ def create_student():
 
 @bp.route('/_delete_student/', methods=['GET', 'POST'])
 def delete_student():
-    student_id = int(request.form['student_id'])
+    student_id = request.form['student_id']
+    assert type(request.form['student_id']) == str
     current_student = StudentModel.query.get_or_404(student_id)
     neighbour = StudentModel.query.filter(StudentModel.id > student_id).first() or StudentModel.query.first()
     session['last_modified'] = neighbour.id

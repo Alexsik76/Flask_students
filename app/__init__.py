@@ -7,7 +7,6 @@ from flask_wtf.csrf import CSRFProtect
 from flask_restful import Api
 from flaskext.markdown import Markdown
 
-
 bootstrap = Bootstrap()
 my_api = Api()
 db = SQLAlchemy()
@@ -30,21 +29,19 @@ def create_app(test_config=None):
     # my_api.init_app(api_bp)
     # app.register_blueprint(api_bp)
 
-    from app.main import bp
-    app.register_blueprint(bp)
-
     db.init_app(app)
     from app.create_db import init_app
     init_app(app)
 
     ma.init_app(app)
-
     Markdown(app)
     from app.models import StudentModel
-    from app.main.forms import SearchStudent
-    with app.app_context():
-        SearchStudent.get_choices()
+    from app.main.forms import StudentBaseForm
 
+    with app.app_context():
+        StudentBaseForm.get_choices()
+    from app.main import bp
+    app.register_blueprint(bp)
     return app
 
 

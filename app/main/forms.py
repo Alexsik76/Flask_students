@@ -1,16 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import Form, FormField,StringField, SubmitField, SelectField, IntegerField, FieldList
+from wtforms import Form, FormField, StringField, SubmitField, SelectField, IntegerField, FieldList
 from app.models import GroupModel, CourseModel
-
-
-class StudentBaseForm(FlaskForm):
-    """
-    :py:class: 'SearchStudent'
-    """
-    first_name = StringField(u'First name')
-    last_name = StringField(u'Last name')
-    av_courses = SelectField(u'Add courses', default='')
-    submit = SubmitField(u'Ok')
+from app.main.common_funcs import get_list_for_choices
 
 
 class CourseForm(Form):
@@ -18,40 +9,42 @@ class CourseForm(Form):
     description = StringField(u'Description')
 
 
-class StudentUpdateForm(StudentBaseForm):
-    group = StringField(u'Group')
-    courses = FieldList(FormField(CourseForm), u'Courses')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.av_courses.choices = get_list_for_choices(kwargs.get('obj', None).get_av_courses(), 'course')
+class SearchGroup(FlaskForm):
+    size = IntegerField(u'Group size')
+    submit = SubmitField(u'Search')
 
 
-def get_list_for_choices(values, field_name):
-    items = [(item.name, item.name) for item in values]
-    default_choice = f'Choice {field_name}'
-    items.append(('', default_choice))
-    return items
-
-
-class SearchStudent(StudentBaseForm):
+class StudentBaseForm(FlaskForm):
     """
-    :py:class: 'StudentBaseForm'
+    :py:class: 'SearchStudent'
     """
-    group = SelectField(u'Groups', default='')
-    submit_search = SubmitField(u'Search')
+    all_courses = []
+    all_groups = []
+    first_name = StringField(u'First name')
+    last_name = StringField(u'Last name')
+    submit = SubmitField(u'Create')
 
     @classmethod
     def get_choices(cls):
         cls.all_groups = get_list_for_choices(GroupModel.query.all(), 'group')
         cls.all_courses = get_list_for_choices(CourseModel.query.all(), 'course')
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.group.choices = SearchStudent.all_groups
-        self.av_courses.choices = SearchStudent.all_courses
+
+class StudentUpdateForm(StudentBaseForm):
+    group = StringField(u'Group')
+    courses = FieldList(FormField(CourseForm), u'Courses')
+    av_courses = SelectField(u'Add courses', default='')
+    submit = SubmitField(u'Ok')
+
+    def __init__(self, obj, *args, **kwargs):
+        super().__init__(obj=obj, *args, **kwargs)
+        self.av_courses.choices = get_list_for_choices(obj.get_av_courses(), 'course')
 
 
-class SearchGroup(FlaskForm):
-    size = IntegerField(u'Group size')
-    submit = SubmitField(u'Search')
+class SearchStudent(StudentBaseForm):
+    """
+    :py:class: 'StudentBaseForm'
+    """
+    group = SelectField(u'Groups', choices=StudentBaseForm.all_groups, default='')
+    course = SelectField(u'Add courses', choices=StudentBaseForm.all_courses, default='')
+    submit_search = SubmitField(u'Search')
