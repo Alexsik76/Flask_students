@@ -8,6 +8,8 @@ from app.main.forms import SearchGroup, StudentBaseForm, SearchStudent, StudentU
 from app.schemas import StudentSchema
 from app import db
 from app.main.common_funcs import get_readme_text, search_student_query, filter_groups_by_size
+
+
 students_schema = StudentSchema(many=True)
 
 

@@ -4,11 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
-from flask_restful import Api
 from flaskext.markdown import Markdown
 
 bootstrap = Bootstrap()
-my_api = Api()
 db = SQLAlchemy()
 ma = Marshmallow()
 csrf = CSRFProtect()
@@ -23,11 +21,8 @@ def create_app(test_config=None):
     csrf.init_app(app)
     bootstrap.init_app(app)
 
-    # # from app.api import bp as api_bp
-    # # from app.api.api_report import ApiReport
-    # my_api.add_resource(ApiReport, '/api/v1/report/')
-    # my_api.init_app(api_bp)
-    # app.register_blueprint(api_bp)
+    from app.api import bp_api
+    app.register_blueprint(bp_api, url_prefix='/api/v1')
 
     db.init_app(app)
     from app.create_db import init_app
