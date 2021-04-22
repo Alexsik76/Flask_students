@@ -39,7 +39,7 @@ def with_search_modal(f):
 def students():
     search_form = SearchStudent()
     if search_form.is_submitted() and search_form.submit_search.data:
-        queries = search_student_query(search_form)
+        queries = search_student_query(search_form.data)
         data = StudentModel.query.filter(and_(*queries)).order_by('id').all()
     else:
         data = StudentModel.query.order_by('id').all()
@@ -80,7 +80,12 @@ def delete_student():
     student_id = request.form['student_id']
     assert type(request.form['student_id']) == str
     current_student = StudentModel.query.get_or_404(student_id)
-    neighbour = StudentModel.query.filter(StudentModel.id > student_id).first() or StudentModel.query.first()
+    neighbour = StudentModel.query\
+        .with_entities(StudentModel.id) \
+        .filter(StudentModel.id < student_id) \
+        .order_by(StudentModel.id.desc()) \
+        .first() \
+        or StudentModel.query.first()
     session['last_modified'] = neighbour.id
     db.session.delete(current_student)
     db.session.commit()

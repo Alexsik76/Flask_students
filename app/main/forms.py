@@ -45,6 +45,11 @@ class SearchStudent(StudentBaseForm):
     """
     :py:class: 'StudentBaseForm'
     """
-    group = SelectField(u'Groups', choices=StudentBaseForm.all_groups, default='')
-    course = SelectField(u'Add courses', choices=StudentBaseForm.all_courses, default='')
+    group = SelectField(u'Groups', default='')
+    course = SelectField(u'Add courses', default='')
     submit_search = SubmitField(u'Search')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.course.choices = StudentBaseForm.all_courses
+        self.group.choices = StudentBaseForm.all_groups

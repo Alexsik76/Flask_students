@@ -33,12 +33,20 @@ $('#main_table').ready(function () {
         student_id = $clickedRowId;
     });
 
-    // Scroll to last modified row
+    // Scroll to last modified row and animate it
     if (typeof last_modified !== 'undefined') {
-        let $tableRow = $('#main_table th:contains("' + last_modified + '")').closest("tr");
+        let $tableRow = $('#main_table th').filter(function() {
+            return $(this).text() == last_modified;
+        }).closest('tr');
         $('html, body').animate({
             scrollTop: ($tableRow.offset().top - 180)
         }, 1000);
+        $tableRow.delay(1200).queue(function () {
+            $(this).addClass("table-success", 200, 'swing', function (){
+                $(this).removeClass("table-success", 1200, 'swing');
+                last_modified = undefined;
+            }).dequeue();
+        });
     }
 });
 

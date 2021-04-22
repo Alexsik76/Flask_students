@@ -15,14 +15,14 @@ def get_readme_text() -> str:
     return readme
 
 
-def search_student_query(form):
+def search_student_query(args):
     query_dict = {
-        'group': StudentModel.group.has(GroupModel.name == form.group.data),
-        'course': StudentModel.courses.any(CourseModel.name == form.course.data),
-        'first_name': StudentModel.first_name == form.first_name.data,
-        'last_name': StudentModel.last_name == form.last_name.data
+        'group': StudentModel.group.has(GroupModel.name == args.get('group')),
+        'course': StudentModel.courses.any(CourseModel.name == args.get('course')),
+        'first_name': StudentModel.first_name == args.get('first_name'),
+        'last_name': StudentModel.last_name == args.get('last_name')
     }
-    queries = tuple(value for key, value in query_dict.items() if getattr(form, key).data)
+    queries = tuple(value for key, value in query_dict.items() if args.get(key))
     return queries
 
 
