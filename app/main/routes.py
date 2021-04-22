@@ -1,3 +1,4 @@
+import json
 from random import choice
 from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, jsonify, session
@@ -44,7 +45,9 @@ def students():
     else:
         data = StudentModel.query.order_by('id').all()
     data_json = students_schema.dump(data)
-    last_modified = session.pop('last_modified', data[0].id if data else StudentModel.query.order_by('id').first())
+    last_modified = session.pop('last_modified', None)
+    print(last_modified)
+    print(jsonify(last_modified))
     return render_template('students.html', data_students=data_json, l_m=last_modified)
 
 
@@ -70,7 +73,7 @@ def create_student():
             group_id=group.id)
         db.session.add(new_student)
         db.session.commit()
-        session['last_modified'] = new_student.id
+        session['last_modified'] = {"updated": new_student.id}
         return redirect(url_for('main.students'), 302)
     return render_template('create_student.html', create_student=create_form)
 
@@ -86,7 +89,8 @@ def delete_student():
         .order_by(StudentModel.id.desc()) \
         .first() \
         or StudentModel.query.first()
-    session['last_modified'] = neighbour.id
+    session['last_modified'] = {"deleted_after": neighbour.id}
+    print(session['last_modified'])
     db.session.delete(current_student)
     db.session.commit()
     return jsonify({"success": True})
@@ -108,7 +112,7 @@ def process_course():
     student_obj = StudentModel.query.get_or_404(student_id)
     getattr(student_obj.courses, action)(course)
     db.session.commit()
-    session['last_modified'] = student_obj.id
+    session['last_modified'] = {"updated": student_obj.id}
     new_form = StudentUpdateForm(obj=student_obj, formdata=None)
     new_template = render_template('student.html', form=new_form, student_id=student_id)
     return jsonify({'new_template': new_template})
