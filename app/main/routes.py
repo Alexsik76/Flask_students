@@ -1,4 +1,3 @@
-import json
 from random import choice
 from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, jsonify, session
@@ -17,11 +16,21 @@ students_schema = StudentSchema(many=True)
 @bp.route('/')
 @bp.route('/index')
 def index():
+    """ Display base page with readme."""
     text = get_readme_text()
     return render_template('index.html', md_text=text)
 
 
 def with_search_modal(f):
+    """ Add modal to the 'students' and 'groups' pages.
+    Both those pages need a similar modal for search.
+    To not repeat both function are wrapped in this decorator.
+
+    :param f: students() or groups()
+    :type f: function
+    :return: page with modal
+    :rtype: Response or None
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         form_dict = {
@@ -38,6 +47,10 @@ def with_search_modal(f):
 @bp.route('/students/', methods=['GET', 'POST'])
 @with_search_modal
 def students():
+    """Display table with all students if all fields of search form are empty or if you are not searching.
+    Else displays the search result.
+    Also transfers data about last modified student to the template for JS functions.
+    """
     search_form = SearchStudent()
     if search_form.is_submitted() and search_form.submit_search.data:
         queries = search_student_query(search_form.data)
@@ -46,14 +59,15 @@ def students():
         data = StudentModel.query.order_by('id').all()
     data_json = students_schema.dump(data)
     last_modified = session.pop('last_modified', None)
-    print(last_modified)
-    print(jsonify(last_modified))
     return render_template('students.html', data_students=data_json, l_m=last_modified)
 
 
 @bp.route('/groups/', methods=['GET', 'POST'])
 @with_search_modal
 def groups():
+    """ Display table with all groups if field of search form is empty or if you are not searching.
+    Else displays the search result.
+    """
     search_form = SearchGroup()
     source_data = filter_groups_by_size(search_form.size.data or 100)
     data = [item.get_dict() for item in source_data]
@@ -63,6 +77,10 @@ def groups():
 
 @bp.route('/_create_student/', methods=['GET', 'POST'])
 def create_student():
+    """ Create student from form data. Automatically sets a group.
+    May be called only from main.js by clicking on a button.
+    Update the session['last_modified'] variable.
+    """
     create_form = StudentBaseForm()
     if create_form.is_submitted():
         available_groups = filter_groups_by_size(29, 9)
@@ -80,6 +98,10 @@ def create_student():
 
 @bp.route('/_delete_student/', methods=['GET', 'POST'])
 def delete_student():
+    """" Delete the chosen student.
+    May be called only from main.js by clicking on a button.
+    Update the session['last_modified'] variable by number of the nearest neighbour before deleted student.
+    """
     student_id = request.form['student_id']
     assert type(request.form['student_id']) == str
     current_student = StudentModel.query.get_or_404(student_id)
@@ -90,7 +112,6 @@ def delete_student():
         .first() \
         or StudentModel.query.first()
     session['last_modified'] = {"deleted_after": neighbour.id}
-    print(session['last_modified'])
     db.session.delete(current_student)
     db.session.commit()
     return jsonify({"success": True})
@@ -98,6 +119,7 @@ def delete_student():
 
 @bp.route('/students/<pk>', methods=['GET', 'POST'])
 def student(pk):
+    """Display modal with information about this <pk> student."""
     this_student = StudentModel.query.get_or_404(pk)
     form = StudentUpdateForm(obj=this_student)
     if form.is_submitted():
@@ -107,6 +129,9 @@ def student(pk):
 
 @bp.route('/_update_courses/', methods=['GET', 'POST'])
 def process_course():
+    """ Serve AJAX queries about adding or removing course of the student.
+    Update the session['last_modified'] variable.
+    """
     course_name, student_id, action = request.form.values()
     course = CourseModel.query.filter_by(name=course_name).first_or_404()
     student_obj = StudentModel.query.get_or_404(student_id)
