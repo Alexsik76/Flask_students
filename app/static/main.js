@@ -34,40 +34,37 @@ $('#main_table').ready(function () {
     });
 
     // Scroll to last modified row and animate it
-    // console.log(last_modified);
-    if (typeof last_modified !== 'undefined' && last_modified['updated'] !== undefined) {
-        console.log(last_modified)
-        let $tableRow = $('#main_table th').filter(function() {
-            return $(this).text() == last_modified['updated'];
-        }).closest('tr');
-        $('html, body').animate({
-            scrollTop: ($tableRow.offset().top - 180)
-        }, 1000);
-        $tableRow.delay(1200).queue(function () {
-            $(this).addClass("table-success", 200, 'swing', function (){
-                $(this).removeClass("table-success", 1200, 'swing');
-                last_modified['updated'] = undefined;
-            }).dequeue();
-        });
-    }
-    else { //TODO: Problem with first student
-        if (typeof last_modified !== 'undefined' && last_modified['deleted_after'] !== undefined) {
-            let $tableRow = $('#main_table th').filter(function () {
-                return $(this).text() == last_modified['deleted_after'];
-            }).closest('tr');
-            $($tableRow).after('<tr id="deleted_row"><th colspan="5">Deleted</th></tr>');
-            $('html, body').animate({
-            scrollTop: ($('#deleted_row').offset().top - 180)
-        }, 1000);
-            $('#deleted_row').delay(1200).queue(function () {
-            $(this).addClass("table-danger", 200, 'swing', function (){
-                $(this).removeClass("table-danger", 1200, 'swing', function (){
-                    last_modified['updated'] = undefined;
-                    $(this).remove();
-                });
+function animate_row(row, changeClass, time) {
+       $('html, body').scrollTop(row.offset().top - 280);
+            row.delay(800).queue(function (next) {
+               $(this).addClass(changeClass);
+               next();
+           });
+            row.delay(time).queue(function (next){
+                $(this).removeClass(changeClass);
+               next();
+               last_modified = undefined;
+            });
+}
 
-            }).dequeue();
-        });
+    if (typeof last_modified !== 'undefined') {
+        if (last_modified['updated'] !== undefined) {
+            let $tableRow = $('#main_table th').filter(function () {
+                return $(this).text() == last_modified['updated'];
+            }).closest('tr');
+            animate_row($tableRow, "table-success", 1800);
+        } else {
+            if (last_modified['after_deleted'] !== undefined) {
+                let $tableRow = $('#main_table th').filter(function () {
+                    return $(this).text() == last_modified['after_deleted'];
+                }).closest('tr');
+                $tableRow.before('<tr id="deleted_row"><th colspan="5">Deleted</th></tr>');
+                animate_row($('#deleted_row'), "table-danger", 1800);
+                $('#deleted_row').delay(800).queue(function (next) {
+                    $(this).remove();
+                    next();
+                });
+            }
         }
     }
 });

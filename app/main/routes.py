@@ -105,15 +105,16 @@ def delete_student():
     student_id = request.form['student_id']
     assert type(request.form['student_id']) == str
     current_student = StudentModel.query.get_or_404(student_id)
+    db.session.delete(current_student)
+    db.session.commit()
     neighbour = StudentModel.query\
         .with_entities(StudentModel.id) \
         .filter(StudentModel.id < student_id) \
         .order_by(StudentModel.id.desc()) \
         .first() \
         or StudentModel.query.first()
-    session['last_modified'] = {"deleted_after": neighbour.id}
-    db.session.delete(current_student)
-    db.session.commit()
+    session['last_modified'] = {"after_deleted": neighbour.id}
+    print(neighbour.id)
     return jsonify({"success": True})
 
 

@@ -1,9 +1,9 @@
 {% extends "base_templates/base.html" %}
 {% block content %}
     {% if l_m %}
-    <script>
-        last_modified = {{ l_m | safe }};
-    </script>
+        <script>
+            last_modified = {{ l_m | safe }};
+        </script>
     {% endif %}
     {{ render_my_table(data_students) }}
 {% endblock %}

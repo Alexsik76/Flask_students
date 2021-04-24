@@ -21,8 +21,6 @@ def create_app(test_config=None):
     csrf.init_app(app)
     bootstrap.init_app(app)
 
-
-
     db.init_app(app)
     from app.create_db import init_app
     init_app(app)
@@ -36,7 +34,7 @@ def create_app(test_config=None):
         StudentBaseForm.get_choices()
 
     from app.api import bp_api
-    app.register_blueprint(bp_api, url_prefix='/api/v1')
+    app.register_blueprint(bp_api, url_prefix='/api/v1/')
 
     from app.main import bp
     app.register_blueprint(bp)
