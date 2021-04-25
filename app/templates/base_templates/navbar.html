@@ -29,5 +29,11 @@
                 </div>
             </div>
         {% endif %}
+    {% if md_text %}
+    <div class="btn-group">
+        <a type="button" class="btn btn-dark" href="{{ url_for('main.index', lang="en") }}">en</a>
+        <a type="button" class="btn btn-dark" href="{{ url_for('main.index', lang="ua") }}">ua</a>
+    </div>
+    {% endif %}
     </div>
 </nav>

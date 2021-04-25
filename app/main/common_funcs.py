@@ -4,12 +4,12 @@ from sqlalchemy import func
 from app.models import GroupModel, CourseModel, StudentModel
 
 
-def get_readme_text() -> str:
+def get_readme_text(md_file) -> str:
     """ Read README.md file
 
     :return: text from file
     """
-    path_to_file = os.path.join(current_app.config['BASE_DIR'], 'README.md')
+    path_to_file = os.path.join(current_app.config['BASE_DIR'], md_file)
     with open(path_to_file, encoding='utf8') as file:
         readme = file.read()
     return readme

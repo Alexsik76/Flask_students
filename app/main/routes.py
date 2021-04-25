@@ -1,6 +1,6 @@
 from random import choice
 from functools import wraps
-from flask import render_template, url_for, flash, redirect, request, jsonify, session
+from flask import render_template, url_for, redirect, request, jsonify, session
 from sqlalchemy import and_
 from app.models import CourseModel, StudentModel
 from app.main import bp
@@ -17,7 +17,11 @@ students_schema = StudentSchema(many=True)
 @bp.route('/index')
 def index():
     """ Display base page with readme."""
-    text = get_readme_text()
+    if request.args and request.args['lang'] == 'ua':
+        file = 'UA_README.md'
+    else:
+        file = 'README.md'
+    text = get_readme_text(file)
     return render_template('index.html', md_text=text)
 
 

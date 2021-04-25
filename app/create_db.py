@@ -10,8 +10,11 @@ from data.data_gen import generate
 def init_db():
     if db.table:
         db.drop_all()
+        print('All tables are dropped.')
     db.create_all()
+    print('Created new tables.')
     students, groups, courses = generate()
+    print('Students, groups names are generated. Courses names and descriptions loaded from file.')
     db.session.add_all([CourseModel(name=name, description=description) for name, description in courses.items()])
     print('10 courses were add to db.')
     db.session.add_all([GroupModel(name=group) for group in groups])
