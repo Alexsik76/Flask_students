@@ -8,13 +8,17 @@ $("#search_student_btn").click(function () {
 $("#create_student_btn").click(function () {
     fill_modal('Create student', '/_create_student/');
 });
-$(window).scroll(function () { // Disable button if on top.
-    if ($(this).scrollTop()) {
-        $('#toTop').fadeIn();
-    } else {
+
+// Disable button if on top.
+$(window).scroll(function () {
+    if ($(this).scrollTop() < 100) {
         $('#toTop').fadeOut();
+    } else {
+        $('#toTop').fadeIn();
     }
 });
+
+
 $("#toTop").click(function () {
     $("html, body").animate({scrollTop: 0}, 1000);
 });
@@ -108,7 +112,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
     // Add selected course for the student
     $('#add_course').click(function () {
         let to_add_course = $("#available_courses option:selected").text();
-        $.post('/_update_courses/', {course: to_add_course, student_id: student_id, action: "append"})
+        $.post('/_update_courses/', {'course': to_add_course, 'student_id': student_id, 'action': "append"})
             .done(function (response) {
                 update_courses(response);
                 $('.alert').text("Course added").fadeIn(500).fadeOut(2000);
@@ -118,7 +122,7 @@ $('.modal').on('shown.bs.modal form_updated', function () {
     // Delete selected course for the student
     $('#del_course').click(function () {
         let to_del_course = $("#courses option:selected").text();
-        $.post('/_update_courses/', {course: to_del_course, student_id: student_id, action: "remove"})
+        $.post('/_update_courses/', {'course': to_del_course, 'student_id': student_id, 'action': "remove"})
             .done(function (response) {
                 update_courses(response);
                 $('.alert').text("Course deleted").fadeIn(500).fadeOut(2000);

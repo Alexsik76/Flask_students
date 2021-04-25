@@ -118,7 +118,6 @@ def delete_student():
         .first() \
         or StudentModel.query.first()
     session['last_modified'] = {"after_deleted": neighbour.id}
-    print(neighbour.id)
     return jsonify({"success": True})
 
 

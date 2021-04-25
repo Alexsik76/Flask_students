@@ -1,3 +1,4 @@
+import os
 import json
 from random import choice
 from string import ascii_lowercase as letters
@@ -22,7 +23,8 @@ def get_courses():
     :rtype: dict
     :return: dict {course_name: description}
     """
-    with open('data/data.json') as file:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(basedir, 'data.json')) as file:
         data = json.load(file)
     return data['courses']
 

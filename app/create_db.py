@@ -4,7 +4,7 @@ from flask.cli import with_appcontext
 from random import randint, sample
 from app import db
 from app.models import GroupModel, CourseModel, StudentModel
-from data.data_gen import generate
+from app.data.data_gen import generate
 
 
 def init_db():
