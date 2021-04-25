@@ -142,9 +142,3 @@ def process_course():
     new_form = StudentUpdateForm(obj=student_obj, formdata=None)
     new_template = render_template('student.html', form=new_form, student_id=student_id)
     return jsonify({'new_template': new_template})
-
-
-@bp.app_errorhandler(404)
-def page_not_found(error):
-    flash(error.description, 'error')
-    return redirect(url_for('main.index'), 302)

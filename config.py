@@ -25,7 +25,7 @@ class Config(object):
     STATIC_FOLDER = 'app/static'
     TEMPLATES_FOLDER = 'app/templates'
     BASE_DIR = basedir
-    # JSON_SORT_KEYS = False
+    JSON_SORT_KEYS = False
     # BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
