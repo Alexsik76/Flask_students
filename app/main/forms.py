@@ -24,11 +24,6 @@ class StudentBaseForm(FlaskForm):
     last_name = StringField(u'Last name')
     submit = SubmitField(u'Create')
 
-    @classmethod
-    def get_choices(cls):
-        cls.all_groups = get_list_for_choices(GroupModel.query.all(), 'group')
-        cls.all_courses = get_list_for_choices(CourseModel.query.all(), 'course')
-
 
 class StudentUpdateForm(StudentBaseForm):
     group = StringField(u'Group')
@@ -51,5 +46,5 @@ class SearchStudent(StudentBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.course.choices = StudentBaseForm.all_courses
-        self.group.choices = StudentBaseForm.all_groups
+        self.course.choices = get_list_for_choices(CourseModel.query.all(), 'course')
+        self.group.choices = get_list_for_choices(GroupModel.query.all(), 'group')

@@ -1,21 +1,18 @@
 import pytest
 from app import create_app
-from app.create_db import init_db
 
 
-@pytest.fixture
-def client():
-    app = create_app()
+@pytest.fixture(scope='session')
+def app(request):
+    app = create_app(test_config=True)
+    ctx = app.app_context()
+    ctx.push()
 
-    app.config["TESTING"] = True
-    app.testing = True
+    def teardown():
+        ctx.pop()
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
-
-    client = app.test_client()
-    with app.app_context():
-        init_db()
-    yield client
+    request.addfinalizer(teardown)
+    return app
 
 
 @pytest.fixture

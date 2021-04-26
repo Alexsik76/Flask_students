@@ -29,10 +29,14 @@
         {{ bootstrap.load_js() }}
         <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
         <script>
+            var csrftoken = $('meta[name=csrf-token]').attr('content')
             $.ajaxSetup({
-                headers:
-                    {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
-            });
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            })
         </script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.url_root|tojson }};

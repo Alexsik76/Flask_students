@@ -136,7 +136,8 @@ def process_course():
     """ Serve AJAX queries about adding or removing course of the student.
     Update the session['last_modified'] variable.
     """
-    course_name, student_id, action = request.form.values()
+    rv = request.get_json() or request.form
+    course_name, student_id, action = [rv.get(key) for key in ['course', 'student_id', 'action']]
     course = CourseModel.query.filter_by(name=course_name).first_or_404()
     student_obj = StudentModel.query.get_or_404(student_id)
     getattr(student_obj.courses, action)(course)
