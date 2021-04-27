@@ -1,19 +1,15 @@
 import pytest
-from app import create_app
-from app.models import StudentModel, GroupModel, CourseModel
+from app import create_app, create_db
 
 
 @pytest.fixture(scope='session')
-def app(request):
-    app = create_app(test_config=True)
-    ctx = app.app_context()
-    ctx.push()
+def client():
+    flask_app = create_app(test_config=True)
 
-    def teardown():
-        ctx.pop()
-
-    request.addfinalizer(teardown)
-    return app
+    with flask_app.test_client() as testing_client:
+        with flask_app.app_context():
+            create_db.init_db()
+            yield testing_client
 
 
 # @pytest.fixture

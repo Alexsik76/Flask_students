@@ -1,22 +1,9 @@
-from app.models import StudentModel, GroupModel, CourseModel
-from app import create_db
 
 
-def test_create_db(app):
-    with app.app_context():
-        create_db.init_db()
+def test_home_page(client):
 
-
-def test_db(app):
-    with app.app_context():
-        assert StudentModel.query.count() == 200
-        assert GroupModel.query.count() == 10
-        assert CourseModel.query.count() == 10
-
-
-def test_index(client):
-    rv = client.get("/index")
-    assert rv.status_code == 200
+    response = client.get('/')
+    assert response.status_code == 200
 
 
 def test_students(client):
