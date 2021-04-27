@@ -3,7 +3,6 @@ from flask_restx import Resource, Api, fields, abort
 from sqlalchemy import and_
 from app.api import bp_api
 from app.models import StudentModel, CourseModel
-from app.main.forms import StudentBaseForm
 from app import db, csrf
 from app.main.common_funcs import filter_groups_by_size, search_student_query
 
@@ -20,6 +19,15 @@ student_model = api.model('Student', {
 })
 
 
+def check_course(action, course, student) -> bool:
+    """ Check is course can be added or deleted for current student."""
+    checks = {
+        'append': course in student.get_av_courses(),
+        'remove': course in CourseModel.query.with_parent(student).all()
+    }
+    return checks.get(action, False)
+
+
 @ns.route('/')
 class StudentList(Resource):
     get_parser = api.parser()
@@ -27,11 +35,9 @@ class StudentList(Resource):
     get_parser.add_argument('last_name', type=str)
     get_parser.add_argument(
         'group',
-        choices=[choice[0] for choice in StudentBaseForm.all_groups]
     )
     get_parser.add_argument(
         'course',
-        choices=[choice[0] for choice in StudentBaseForm.all_courses]
     )
     post_parser = api.parser()
     post_parser.add_argument('first_name', type=str, required=True, help="First name cannot be blank!")
@@ -68,10 +74,10 @@ class StudentList(Resource):
 @ns.response(404, 'Student not found')
 @ns.param('student_id', 'The student identifier')
 class Student(Resource):
+
     put_parser = api.parser()
     put_parser.add_argument('action', choices=['append', 'remove'], help="Append(add) or remove an course.")
     put_parser.add_argument('course',
-                            choices=[choice[0] for choice in StudentBaseForm.all_courses],
                             help="Course being processed.")
 
     @ns.doc('get_student')
@@ -103,12 +109,3 @@ class Student(Resource):
             return student
         error_message = f'You can`t {action} {course.name} for {student.first_name} {student.last_name} student.'
         return abort(400, message=error_message)
-
-
-def check_course(action, course, student) -> bool:
-    """ Check is course can be added or deleted for current student."""
-    checks = {
-        'append': course in student.get_av_courses(),
-        'remove': course in CourseModel.query.with_parent(student).all()
-    }
-    return checks.get(action, False)

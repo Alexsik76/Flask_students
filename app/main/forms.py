@@ -5,13 +5,13 @@ from app.main.common_funcs import get_list_for_choices
 
 
 class CourseForm(Form):
-    name = StringField(u'Course name')
-    description = StringField(u'Description')
+    name = StringField('Course name')
+    description = StringField('Description')
 
 
 class SearchGroup(FlaskForm):
-    size = IntegerField(u'Group size')
-    submit = SubmitField(u'Search')
+    size = IntegerField('Group size')
+    submit = SubmitField('Search')
 
 
 class StudentBaseForm(FlaskForm):
@@ -20,16 +20,16 @@ class StudentBaseForm(FlaskForm):
     """
     all_courses = []
     all_groups = []
-    first_name = StringField(u'First name')
-    last_name = StringField(u'Last name')
-    submit = SubmitField(u'Create')
+    first_name = StringField('First name')
+    last_name = StringField('Last name')
+    submit = SubmitField('Create')
 
 
 class StudentUpdateForm(StudentBaseForm):
-    group = StringField(u'Group')
-    courses = FieldList(FormField(CourseForm), u'Courses')
-    av_courses = SelectField(u'Add courses', default='')
-    submit = SubmitField(u'Ok')
+    group = StringField('Group')
+    courses = FieldList(FormField(CourseForm), 'Courses')
+    av_courses = SelectField('Add courses', default='')
+    submit = SubmitField('Ok')
 
     def __init__(self, obj, *args, **kwargs):
         super().__init__(obj=obj, *args, **kwargs)
@@ -40,11 +40,11 @@ class SearchStudent(StudentBaseForm):
     """
     :py:class: 'StudentBaseForm'
     """
-    group = SelectField(u'Groups', default='')
-    course = SelectField(u'Add courses', default='')
-    submit_search = SubmitField(u'Search')
+    group = SelectField('Groups', default='')
+    course = SelectField('Add courses', default='')
+    submit_search = SubmitField('Search')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.course.choices = get_list_for_choices(CourseModel.query.all(), 'course')
-        self.group.choices = get_list_for_choices(GroupModel.query.all(), 'group')
+        self.course.choices = get_list_for_choices(CourseModel.query.with_entities(CourseModel.name).all(), 'course')
+        self.group.choices = get_list_for_choices(GroupModel.query.with_entities(GroupModel.name).all(), 'group')

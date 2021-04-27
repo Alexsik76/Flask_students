@@ -1,5 +1,6 @@
 import pytest
 from app import create_app
+from app.models import StudentModel, GroupModel, CourseModel
 
 
 @pytest.fixture(scope='session')
@@ -17,4 +18,5 @@ def app(request):
 
 @pytest.fixture
 def runner(app):
+
     return app.test_cli_runner()
