@@ -24,12 +24,19 @@ def create_app(test_config=False):
     app.register_blueprint(errors_bp)
 
     bootstrap.init_app(app)
+
+    Markdown(app)
+
     db.init_app(app)
 
-    from app.create_db import init_app, init_db
+    from app.create_db import init_app
     init_app(app)
+
     ma.init_app(app)
-    Markdown(app)
+
+    # from app.models import StudentModel
+    # with app.app_context():
+    #     x = StudentModel.query.all()
 
     from app.api import bp_api
     app.register_blueprint(bp_api, url_prefix='/api/v1/')

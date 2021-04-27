@@ -1,9 +1,10 @@
 from app.models import StudentModel, GroupModel, CourseModel
+from app import create_db
 
 
-def test_cli(runner):
-    result = runner.invoke(args=['init-db'])
-    assert 'Initialized the database.' in result.output
+def test_create_db(app):
+    with app.app_context():
+        create_db.init_db()
 
 
 def test_db(app):
