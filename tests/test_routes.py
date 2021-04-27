@@ -1,4 +1,8 @@
 
+def test_cli(runner):
+    result = runner.invoke(args=['init-db'])
+    assert 'Initialized the database.' in result.output
+
 
 def test_home_page(client):
 

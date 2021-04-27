@@ -45,7 +45,8 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     DEBUG = False
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
+    BASE_DIR = basedir
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, 'app.db')
     # WTF_CSRF_ENABLED = False
 
 

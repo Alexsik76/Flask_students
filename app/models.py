@@ -1,3 +1,4 @@
+from flask import current_app
 from app import db
 
 
@@ -34,6 +35,13 @@ class GroupModel(db.Model):
 
 
 class StudentModel(db.Model):
+    all_groups = []
+    all_courses = []
+
+    @classmethod
+    def get_all_groups_and_courses(cls):
+        cls.all_groups = [item[0] for item in GroupModel.query.with_entities(GroupModel.name).all()]
+        cls.all_courses = [item[0] for item in CourseModel.query.with_entities(CourseModel.name).all()]
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(24), index=True)
     last_name = db.Column(db.String(24), index=True)
@@ -55,4 +63,4 @@ class StudentModel(db.Model):
             .with_entities(CourseModel.id)
         av_courses = CourseModel.query\
             .filter(CourseModel.id.notin_(my_courses)).all()
-        return av_courses
+        return av_courses, my_courses

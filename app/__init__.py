@@ -35,9 +35,9 @@ def create_app(test_config=False):
 
     ma.init_app(app)
 
-    # from app.models import StudentModel
-    # with app.app_context():
-    #     x = StudentModel.query.all()
+    from app.models import StudentModel
+    with app.app_context():
+        StudentModel.get_all_groups_and_courses()
 
     from app.api import bp_api
     app.register_blueprint(bp_api, url_prefix='/api/v1/')

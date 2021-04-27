@@ -18,6 +18,16 @@ student_model = api.model('Student', {
     'courses': fields.List(fields.String)
 })
 
+get_parser = api.parser()
+get_parser.add_argument('first_name', type=str)
+get_parser.add_argument('last_name', type=str)
+get_parser.add_argument('group', choices=StudentModel.all_groups)
+get_parser.add_argument('course', choices=StudentModel.all_courses)
+
+post_parser = api.parser()
+post_parser.add_argument('first_name', type=str, required=True, help="First name cannot be blank!")
+post_parser.add_argument('last_name', type=str, required=True, help="Last name cannot be blank!")
+
 
 def check_course(action, course, student) -> bool:
     """ Check is course can be added or deleted for current student."""
@@ -30,18 +40,6 @@ def check_course(action, course, student) -> bool:
 
 @ns.route('/')
 class StudentList(Resource):
-    get_parser = api.parser()
-    get_parser.add_argument('first_name', type=str)
-    get_parser.add_argument('last_name', type=str)
-    get_parser.add_argument(
-        'group',
-    )
-    get_parser.add_argument(
-        'course',
-    )
-    post_parser = api.parser()
-    post_parser.add_argument('first_name', type=str, required=True, help="First name cannot be blank!")
-    post_parser.add_argument('last_name', type=str, required=True, help="Last name cannot be blank!")
 
     @ns.expect(get_parser)
     @ns.marshal_list_with(student_model)
@@ -49,7 +47,7 @@ class StudentList(Resource):
         """ Get all students or search students by first_name, last_name, group, course.
         Any number of parameters can be passed, or neither.
         """
-        args = self.get_parser.parse_args()
+        args = get_parser.parse_args()
         queries = search_student_query(args)
         data = StudentModel.query.filter(and_(*queries)).order_by('id').all()
         return data
@@ -58,7 +56,7 @@ class StudentList(Resource):
     @ns.marshal_with(student_model, code=201)
     def post(self):
         """ Create a new student."""
-        data = self.post_parser.parse_args()
+        data = post_parser.parse_args()
         available_groups = filter_groups_by_size(29, 9)
         group = choice(available_groups)
         new_student = StudentModel(
@@ -77,7 +75,7 @@ class Student(Resource):
 
     put_parser = api.parser()
     put_parser.add_argument('action', choices=['append', 'remove'], help="Append(add) or remove an course.")
-    put_parser.add_argument('course',
+    put_parser.add_argument('course', choices=StudentModel.all_courses,
                             help="Course being processed.")
 
     @ns.doc('get_student')
