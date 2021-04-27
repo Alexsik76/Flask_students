@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
 from flaskext.markdown import Markdown
 
+
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 ma = Marshmallow()
