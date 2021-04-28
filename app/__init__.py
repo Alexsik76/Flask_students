@@ -15,6 +15,10 @@ csrf = CSRFProtect()
 
 
 def get_choices_v1(flask_app):
+    """ Creates choices lists for Swaggers documentation.
+    Lists of groups and courses must be created before the first api call for them to appear in the Swagger.
+    But when running init-db, if the database does not exist, it causes an error.
+    """
     from app.models import StudentModel
     engine = db.get_engine(flask_app)
     tables = engine.table_names()
@@ -24,6 +28,7 @@ def get_choices_v1(flask_app):
 
 
 def get_choices_v2(flask_app):
+    """ Same as get_choices_v1()."""
     with flask_app.app_context():
         from app.models import StudentModel
         try:
