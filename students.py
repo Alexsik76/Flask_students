@@ -1,5 +1,5 @@
-from app import create_app, db
 from app.models import StudentModel, GroupModel, CourseModel
+from app import db, create_app
 app = create_app()
 
 

@@ -30,18 +30,18 @@ def test_error(client):
     assert rv.status_code == 404
 
 
-def test_api(client):
-    rv = client.get("/api/v1/students/1")
+def test_api_get_all(client):
+    rv = client.get("/api/v1/students/")
     assert rv.status_code == 200
 
 
-def test_api2(client):
+def test_api_get_by_id(client):
     rv = client.get("/api/v1/students/1")
     json_data = rv.get_json()
     assert json_data['id'] == 1
 
 
-def test_api3(client):
+def test_api_post_new_student(client):
     rv = client.post("/api/v1/students/", json={'first_name': 'Jon', 'last_name': 'Snow'})
     json_data = rv.json
     assert json_data['first_name'] == 'Jon'

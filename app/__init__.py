@@ -1,6 +1,6 @@
 from flask import Flask
 from config import app_config
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, inspect
 from flask_marshmallow import Marshmallow
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
@@ -36,8 +36,12 @@ def create_app(test_config=False):
     ma.init_app(app)
 
     from app.models import StudentModel
-    with app.app_context():
-        StudentModel.get_all_groups_and_courses()
+    engine = db.get_engine(app)
+    tables = engine.table_names()
+    print(f'{tables = }')
+    if tables:
+        with app.app_context():
+            StudentModel.get_all_groups_and_courses()
 
     from app.api import bp_api
     app.register_blueprint(bp_api, url_prefix='/api/v1/')

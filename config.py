@@ -46,7 +46,7 @@ class TestingConfig(Config):
     DEBUG = False
     TESTING = True
     BASE_DIR = basedir
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, 'app.db')
+    SQLALCHEMY_DATABASE_URI = "sqlite://"
     # WTF_CSRF_ENABLED = False
 
 
