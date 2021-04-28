@@ -18,6 +18,7 @@ student_model = api.model('Student', {
     'courses': fields.List(fields.String)
 })
 
+
 get_parser = api.parser()
 get_parser.add_argument('first_name', type=str)
 get_parser.add_argument('last_name', type=str)

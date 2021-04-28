@@ -30,6 +30,7 @@ class Config(object):
     # BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
     # BOOTSTRAP_ICON_SIZE = '1.5em'
     # BOOTSTRAP_ICON_COLOR = 'light'
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, 'app.db')
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL') or f'postgresql+psycopg2://{DB_USER}:{DB_PW}@{DB_PATH}/{DB_NAME}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

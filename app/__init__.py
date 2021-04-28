@@ -1,6 +1,7 @@
 from flask import Flask
 from config import app_config
-from flask_sqlalchemy import SQLAlchemy, inspect
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import OperationalError
 from flask_marshmallow import Marshmallow
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
@@ -11,6 +12,24 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 ma = Marshmallow()
 csrf = CSRFProtect()
+
+
+def get_choices_v1(flask_app):
+    from app.models import StudentModel
+    engine = db.get_engine(flask_app)
+    tables = engine.table_names()
+    if tables:
+        with flask_app.app_context():
+            StudentModel.get_all_groups_and_courses()
+
+
+def get_choices_v2(flask_app):
+    with flask_app.app_context():
+        from app.models import StudentModel
+        try:
+            StudentModel.get_all_groups_and_courses()
+        except OperationalError as _:
+            print('Expected error.')
 
 
 def create_app(test_config=False):
@@ -35,18 +54,13 @@ def create_app(test_config=False):
 
     ma.init_app(app)
 
-    from app.models import StudentModel
-    engine = db.get_engine(app)
-    tables = engine.table_names()
-    if tables:
-        with app.app_context():
-            StudentModel.get_all_groups_and_courses()
-
+    get_choices_v1(app)
     from app.api import bp_api
     app.register_blueprint(bp_api, url_prefix='/api/v1/')
 
     from app.main import bp
     app.register_blueprint(bp)
+
     return app
 
 
