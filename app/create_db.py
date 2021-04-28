@@ -8,9 +8,8 @@ from app.data.data_gen import generate
 
 
 def init_db():
-    if db.table:
-        db.drop_all()
-        print('All tables are dropped.')
+    db.drop_all()
+    print('All tables are dropped.')
     db.create_all()
     print('Created new tables.')
     students, groups, courses = generate()

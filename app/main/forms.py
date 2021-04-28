@@ -33,7 +33,7 @@ class StudentUpdateForm(StudentBaseForm):
 
     def __init__(self, obj, *args, **kwargs):
         super().__init__(obj=obj, *args, **kwargs)
-        self.av_courses.choices = get_list_for_choices(obj.get_av_courses()[0], 'course')
+        self.av_courses.choices = get_list_for_choices(obj.get_av_courses(), 'course')
 
 
 class SearchStudent(StudentBaseForm):

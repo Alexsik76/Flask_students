@@ -62,4 +62,4 @@ class StudentModel(db.Model):
             .with_entities(CourseModel.id)
         av_courses = CourseModel.query\
             .filter(CourseModel.id.notin_(my_courses)).all()
-        return av_courses, my_courses
+        return av_courses

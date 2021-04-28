@@ -32,7 +32,7 @@ post_parser.add_argument('last_name', type=str, required=True, help="Last name c
 def check_course(action, course, student) -> bool:
     """ Check is course can be added or deleted for current student."""
     checks = {
-        'append': course in student.get_av_courses()[0],
+        'append': course in student.get_av_courses(),
         'remove': course in CourseModel.query.with_parent(student).all()
     }
     return checks.get(action, False)

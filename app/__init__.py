@@ -38,7 +38,6 @@ def create_app(test_config=False):
     from app.models import StudentModel
     engine = db.get_engine(app)
     tables = engine.table_names()
-    print(f'{tables = }')
     if tables:
         with app.app_context():
             StudentModel.get_all_groups_and_courses()
