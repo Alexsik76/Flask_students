@@ -1,0 +1,9 @@
+{% from 'bootstrap/form.html' import render_field%}
+<form method="post" class="form">
+    {{ search_form.csrf_token() }}
+    {{ render_field(search_form.first_name, placeholder="Jon") }}
+    {{ render_field(search_form.last_name, placeholder="Snow") }}
+    {{ render_field(search_form.group) }}
+    {{ render_field(search_form.course) }}
+    <div class="float-right">{{ render_field(search_form.submit_search) }}</div>
+</form>

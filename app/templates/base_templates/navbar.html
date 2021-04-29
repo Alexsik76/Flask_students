@@ -1,0 +1,39 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark text-light">
+    <div class="navbar-nav mr-auto">
+        {{ render_nav_item('main.index', render_icon("house", size="1.4em")) }}
+        {{ render_nav_item('main.students', 'Students') }}
+        {{ render_nav_item('main.groups', 'Groups') }}
+    </div>
+    <div class="navbar-nav ml-auto">
+        {% if data_groups %}
+            <span data-toggle="tooltip" data-placement="bottom" title="Search groups">
+            <button type="button" id="search_group_btn" class="btn btn-dark" data-toggle="modal" data-target=".modal">
+            {{ render_icon('search') }}
+            </button>
+            </span>
+        {% elif data_students %}
+            <div class="row">
+                <div class="col-lg-12 my-6"><span data-toggle="tooltip" data-placement="bottom" title="Search student">
+                    <button type="button" id="search_student_btn" class="btn btn-dark" data-toggle="modal"
+                            data-target=".modal">
+                        {{ render_icon('search') }}
+                    </button>
+                </span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="Create student">
+                    <button type="button" id="create_student_btn" class="btn btn-dark" data-toggle="modal"
+                            data-target=".modal">
+                        {{ render_icon('person-plus', size='1.2em') }}
+                        </button>
+                    </span>
+                </div>
+            </div>
+        {% endif %}
+    {% if md_text %}
+    <div class="btn-group">
+        <a type="button" class="btn btn-dark" href="{{ url_for('main.index', lang="en") }}">en</a>
+        <a type="button" class="btn btn-dark" href="{{ url_for('main.index', lang="ua") }}">ua</a>
+    </div>
+    {% endif %}
+    </div>
+</nav>

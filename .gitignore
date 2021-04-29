@@ -1,0 +1,7 @@
+/.idea/
+__pycache__/
+app/__pycache__/
+/.coverage
+/app.db
+/make.bat
+/Makefile

@@ -1,0 +1,72 @@
+{% from 'bootstrap/utils.html' import render_icon, render_messages %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% macro modal() -%}
+    <div class="modal fade" id="EmptyModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+         aria-hidden="true" data-show="true">
+        <div class="modal-dialog rounded" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalLabel">
+                         <span></span>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body rounded"></div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro select(title, id, items) -%}
+    <div class="form-group row">
+        <div class="col-sm-2 my-1">
+            <label for={{ id }} class="text-muted">{{ title }}</label>
+        </div>
+        <div class="col-sm-5 my-1">
+            <select id={{ id }} class="custom-select" multiple size="{{ items | count }}">
+                {% for course in items %}
+                    <option value={{ loop.index }} data-toggle="tooltip" data-html="true" title="{{ course['description'] }}">{{ course['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-5 my-1">
+            <button type="button" id="del_course" class="btn btn-danger" disabled>{{ render_icon('x-square') }} Delete
+                course
+            </button>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro form_row(placeholder, data) -%}
+    <div class="form-group row inline">
+        <label for="{{ data.name }}" class="col-sm-4 text-muted col-form-label">{{ placeholder }}:</label>
+        <input type="text" class="form-control-plaintext col-sm-4" id={{ data.name }} value={{ data.data }}>
+    </div>
+{%- endmacro %}
+
+{% macro render_my_table(data) -%}
+    <table id="main_table" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Group</th>
+            <th scope="col">Courses</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in data %}
+            <tr id='StudentsTableRow' data-toggle="modal" data-target=".modal">
+                <th scope="row">{{ student['id'] }}</th>
+                <td>{{ student['first_name'] }}</td>
+                <td>{{ student['last_name'] }}</td>
+                <td>{{ student['group'] }}</td>
+                <td>{{ student['courses']|join(', ') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{%- endmacro %}

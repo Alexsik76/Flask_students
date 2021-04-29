@@ -1,0 +1,46 @@
+{% include 'base_templates/head.html' %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/utils.html' import render_icon, render_messages %}
+{% from 'bootstrap/table.html' import render_table %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'base_templates/my_macro.html' import modal, select, form_row, render_my_table %}
+<body style="padding-top: 50px">
+{% include 'base_templates/navbar.html' %}
+<main>
+    <div class="jumbotron container">
+        {% block content %}{% endblock %}
+    </div>
+<div style="
+    position: fixed;
+    bottom: 125px;
+    right: 25px;
+    {#display: none;#}
+">
+        <button id='toTop' type="button" class="btn btn-secondary btn-sm ml-auto" style="display: none" >{{ render_icon('arrow-up-square', size="1.5em") }}</button>
+    </div>
+</main>
+{% block macroses %}
+{{ modal() }}
+{% endblock %}
+{% include 'base_templates/footer.html' %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+    {% block scripts %}
+            <!-- Optional JavaScript -->
+        {{ bootstrap.load_js() }}
+        <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+        <script>
+            var csrftoken = $('meta[name=csrf-token]').attr('content')
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            })
+        </script>
+        <script type=text/javascript>
+            $SCRIPT_ROOT = {{ request.url_root|tojson }};
+        </script>
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+    {% endblock %}
+</body>
