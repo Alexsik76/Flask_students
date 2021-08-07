@@ -20,15 +20,14 @@ def get_choices_v1(flask_app):
     But when running init-db, if the database does not exist, it causes an error.
     """
     from app.models import StudentModel
-    engine = db.get_engine(flask_app)
-    tables = engine.table_names()
-    if tables:
+    if db.get_engine(flask_app).table_names():
         with flask_app.app_context():
             StudentModel.get_all_groups_and_courses()
 
 
 def get_choices_v2(flask_app):
     """ Same as get_choices_v1()."""
+
     with flask_app.app_context():
         from app.models import StudentModel
         try:
