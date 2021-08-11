@@ -5,4 +5,4 @@ app/__pycache__/
 /app.db
 /make.bat
 /Makefile
-/.env
+.env
