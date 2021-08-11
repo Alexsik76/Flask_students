@@ -25,24 +25,9 @@ def get_choices_v1(flask_app):
             StudentModel.get_all_groups_and_courses()
 
 
-def get_choices_v2(flask_app):
-    """ Same as get_choices_v1()."""
-
-    with flask_app.app_context():
-        from app.models import StudentModel
-        try:
-            StudentModel.get_all_groups_and_courses()
-        except OperationalError as _:
-            print('Expected error.')
-
-
-def create_app(test_config=False):
+def create_app(config='base_config'):
     app = Flask(__name__)
-    if test_config:
-        app.config.from_object(app_config['testing'])
-    else:
-        app.config.from_object(app_config['develop'])
-
+    app.config.from_object(app_config.get(config))
     csrf.init_app(app)
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
