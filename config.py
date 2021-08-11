@@ -21,10 +21,6 @@ class Config(object):
     TEMPLATES_FOLDER = 'app/templates'
     BASE_DIR = basedir
     JSON_SORT_KEYS = False
-    # BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
-    # BOOTSTRAP_ICON_SIZE = '1.5em'
-    # BOOTSTRAP_ICON_COLOR = 'light'
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, 'app.db')
     SQLALCHEMY_DATABASE_URI = get_env_variable('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_SAMESITE = 'Lax'
